@@ -1,0 +1,1943 @@
+{
+  "program-points": [
+    {
+      "count": 4,
+      "syntax": {
+        "column": 12,
+        "content": "(== (quasiquote ((unquote x) unquote zs)) xs)",
+        "line": 5,
+        "position": 136,
+        "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+      }
+    },
+    {
+      "count": 4,
+      "syntax": {
+        "column": 12,
+        "content": "(== (quasiquote ((unquote x) unquote zsys)) xsys)",
+        "line": 6,
+        "position": 170,
+        "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+      }
+    },
+    {
+      "count": 3,
+      "syntax": {
+        "column": 12,
+        "content": "(appendo zs ys zsys)",
+        "line": 7,
+        "position": 206,
+        "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+      }
+    },
+    {
+      "count": 1,
+      "syntax": {
+        "column": 56,
+        "content": "(appendo xs ys (quote (1 2 3)))",
+        "line": 3,
+        "position": 152,
+        "source": "2-interactions from an unsaved editor"
+      }
+    },
+    {
+      "count": 4,
+      "syntax": {
+        "column": 10,
+        "content": "(== xs (quote ()))",
+        "line": 2,
+        "position": 49,
+        "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+      }
+    },
+    {
+      "count": 4,
+      "syntax": {
+        "column": 22,
+        "content": "(== ys xsys)",
+        "line": 2,
+        "position": 61,
+        "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+      }
+    },
+    {
+      "count": 4,
+      "syntax": {
+        "column": 10,
+        "content": "(== 1 2)",
+        "line": 3,
+        "position": 85,
+        "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+      }
+    }
+  ],
+  "rejected-states": [
+    {
+      "diseq": [],
+      "distypes": [],
+      "path": [
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zsys)) xsys)",
+          "line": 6,
+          "position": 170,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zs)) xs)",
+          "line": 5,
+          "position": 136,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zsys)) xsys)",
+          "line": 6,
+          "position": 170,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zs)) xs)",
+          "line": 5,
+          "position": 136,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zsys)) xsys)",
+          "line": 6,
+          "position": 170,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zs)) xs)",
+          "line": 5,
+          "position": 136,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zsys)) xsys)",
+          "line": 6,
+          "position": 170,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zs)) xs)",
+          "line": 5,
+          "position": 136,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 56,
+          "content": "(appendo xs ys (quote (1 2 3)))",
+          "line": 3,
+          "position": 152,
+          "source": "2-interactions from an unsaved editor"
+        }
+      ],
+      "stack": [
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 56,
+          "content": "(appendo xs ys (quote (1 2 3)))",
+          "line": 3,
+          "position": 152,
+          "source": "2-interactions from an unsaved editor"
+        }
+      ],
+      "sub": [
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "x"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "zs"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zsys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": []
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "x"
+            }
+          },
+          "t2": {
+            "type": "num",
+            "value": 3
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "x"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "zs"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zsys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "num",
+                "value": 3
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "x"
+            }
+          },
+          "t2": {
+            "type": "num",
+            "value": 2
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "x"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "zs"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zsys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "num",
+                "value": 2
+              },
+              {
+                "type": "num",
+                "value": 3
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "x"
+            }
+          },
+          "t2": {
+            "type": "num",
+            "value": 1
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "xs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "x"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "zs"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": false
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "xs"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "ys"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "types": []
+    },
+    {
+      "diseq": [],
+      "distypes": [],
+      "path": [
+        {
+          "column": 10,
+          "content": "(== 1 2)",
+          "line": 3,
+          "position": 85,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zsys)) xsys)",
+          "line": 6,
+          "position": 170,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zs)) xs)",
+          "line": 5,
+          "position": 136,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zsys)) xsys)",
+          "line": 6,
+          "position": 170,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zs)) xs)",
+          "line": 5,
+          "position": 136,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zsys)) xsys)",
+          "line": 6,
+          "position": 170,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zs)) xs)",
+          "line": 5,
+          "position": 136,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 56,
+          "content": "(appendo xs ys (quote (1 2 3)))",
+          "line": 3,
+          "position": 152,
+          "source": "2-interactions from an unsaved editor"
+        }
+      ],
+      "stack": [
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 56,
+          "content": "(appendo xs ys (quote (1 2 3)))",
+          "line": 3,
+          "position": 152,
+          "source": "2-interactions from an unsaved editor"
+        }
+      ],
+      "sub": [
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zsys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": []
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "x"
+            }
+          },
+          "t2": {
+            "type": "num",
+            "value": 3
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "x"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "zs"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zsys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "num",
+                "value": 3
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "x"
+            }
+          },
+          "t2": {
+            "type": "num",
+            "value": 2
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "x"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "zs"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zsys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "num",
+                "value": 2
+              },
+              {
+                "type": "num",
+                "value": 3
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "x"
+            }
+          },
+          "t2": {
+            "type": "num",
+            "value": 1
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "xs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "x"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "zs"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": false
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "xs"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "ys"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "types": []
+    },
+    {
+      "diseq": [],
+      "distypes": [],
+      "path": [
+        {
+          "column": 10,
+          "content": "(== 1 2)",
+          "line": 3,
+          "position": 85,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zsys)) xsys)",
+          "line": 6,
+          "position": 170,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zs)) xs)",
+          "line": 5,
+          "position": 136,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zsys)) xsys)",
+          "line": 6,
+          "position": 170,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zs)) xs)",
+          "line": 5,
+          "position": 136,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 56,
+          "content": "(appendo xs ys (quote (1 2 3)))",
+          "line": 3,
+          "position": 152,
+          "source": "2-interactions from an unsaved editor"
+        }
+      ],
+      "stack": [
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 56,
+          "content": "(appendo xs ys (quote (1 2 3)))",
+          "line": 3,
+          "position": 152,
+          "source": "2-interactions from an unsaved editor"
+        }
+      ],
+      "sub": [
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zsys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "num",
+                "value": 3
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "x"
+            }
+          },
+          "t2": {
+            "type": "num",
+            "value": 2
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "x"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "zs"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zsys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "num",
+                "value": 2
+              },
+              {
+                "type": "num",
+                "value": 3
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "x"
+            }
+          },
+          "t2": {
+            "type": "num",
+            "value": 1
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "xs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "x"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "zs"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": false
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "xs"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "ys"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "types": []
+    },
+    {
+      "diseq": [],
+      "distypes": [],
+      "path": [
+        {
+          "column": 10,
+          "content": "(== 1 2)",
+          "line": 3,
+          "position": 85,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zsys)) xsys)",
+          "line": 6,
+          "position": 170,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zs)) xs)",
+          "line": 5,
+          "position": 136,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 56,
+          "content": "(appendo xs ys (quote (1 2 3)))",
+          "line": 3,
+          "position": 152,
+          "source": "2-interactions from an unsaved editor"
+        }
+      ],
+      "stack": [
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 56,
+          "content": "(appendo xs ys (quote (1 2 3)))",
+          "line": 3,
+          "position": 152,
+          "source": "2-interactions from an unsaved editor"
+        }
+      ],
+      "sub": [
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zsys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "num",
+                "value": 2
+              },
+              {
+                "type": "num",
+                "value": 3
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "x"
+            }
+          },
+          "t2": {
+            "type": "num",
+            "value": 1
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "xs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "x"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "zs"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": false
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "xs"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "ys"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "types": []
+    },
+    {
+      "diseq": [],
+      "distypes": [],
+      "path": [
+        {
+          "column": 10,
+          "content": "(== 1 2)",
+          "line": 3,
+          "position": 85,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 56,
+          "content": "(appendo xs ys (quote (1 2 3)))",
+          "line": 3,
+          "position": 152,
+          "source": "2-interactions from an unsaved editor"
+        }
+      ],
+      "stack": [
+        {
+          "column": 56,
+          "content": "(appendo xs ys (quote (1 2 3)))",
+          "line": 3,
+          "position": 152,
+          "source": "2-interactions from an unsaved editor"
+        }
+      ],
+      "sub": [
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": false
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "xs"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "ys"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "types": []
+    }
+  ],
+  "solutions": [
+    {
+      "diseq": [],
+      "distypes": [],
+      "path": [
+        {
+          "column": 22,
+          "content": "(== ys xsys)",
+          "line": 2,
+          "position": 61,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 10,
+          "content": "(== xs (quote ()))",
+          "line": 2,
+          "position": 49,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 56,
+          "content": "(appendo xs ys (quote (1 2 3)))",
+          "line": 3,
+          "position": 152,
+          "source": "2-interactions from an unsaved editor"
+        }
+      ],
+      "stack": [],
+      "sub": [
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "ys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "num",
+                "value": 1
+              },
+              {
+                "type": "num",
+                "value": 2
+              },
+              {
+                "type": "num",
+                "value": 3
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "xs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": []
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": false
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "xs"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "ys"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "types": []
+    },
+    {
+      "diseq": [],
+      "distypes": [],
+      "path": [
+        {
+          "column": 22,
+          "content": "(== ys xsys)",
+          "line": 2,
+          "position": 61,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 10,
+          "content": "(== xs (quote ()))",
+          "line": 2,
+          "position": 49,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zsys)) xsys)",
+          "line": 6,
+          "position": 170,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zs)) xs)",
+          "line": 5,
+          "position": 136,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 56,
+          "content": "(appendo xs ys (quote (1 2 3)))",
+          "line": 3,
+          "position": 152,
+          "source": "2-interactions from an unsaved editor"
+        }
+      ],
+      "stack": [],
+      "sub": [
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "ys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "num",
+                "value": 2
+              },
+              {
+                "type": "num",
+                "value": 3
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": []
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zsys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "num",
+                "value": 2
+              },
+              {
+                "type": "num",
+                "value": 3
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "x"
+            }
+          },
+          "t2": {
+            "type": "num",
+            "value": 1
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "xs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "x"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "zs"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": false
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "xs"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "ys"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "types": []
+    },
+    {
+      "diseq": [],
+      "distypes": [],
+      "path": [
+        {
+          "column": 22,
+          "content": "(== ys xsys)",
+          "line": 2,
+          "position": 61,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 10,
+          "content": "(== xs (quote ()))",
+          "line": 2,
+          "position": 49,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zsys)) xsys)",
+          "line": 6,
+          "position": 170,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zs)) xs)",
+          "line": 5,
+          "position": 136,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zsys)) xsys)",
+          "line": 6,
+          "position": 170,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zs)) xs)",
+          "line": 5,
+          "position": 136,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 56,
+          "content": "(appendo xs ys (quote (1 2 3)))",
+          "line": 3,
+          "position": 152,
+          "source": "2-interactions from an unsaved editor"
+        }
+      ],
+      "stack": [],
+      "sub": [
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "ys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "num",
+                "value": 3
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": []
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zsys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "num",
+                "value": 3
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "x"
+            }
+          },
+          "t2": {
+            "type": "num",
+            "value": 2
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "x"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "zs"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zsys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "num",
+                "value": 2
+              },
+              {
+                "type": "num",
+                "value": 3
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "x"
+            }
+          },
+          "t2": {
+            "type": "num",
+            "value": 1
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "xs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "x"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "zs"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": false
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "xs"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "ys"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "types": []
+    },
+    {
+      "diseq": [],
+      "distypes": [],
+      "path": [
+        {
+          "column": 22,
+          "content": "(== ys xsys)",
+          "line": 2,
+          "position": 61,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 10,
+          "content": "(== xs (quote ()))",
+          "line": 2,
+          "position": 49,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zsys)) xsys)",
+          "line": 6,
+          "position": 170,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zs)) xs)",
+          "line": 5,
+          "position": 136,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zsys)) xsys)",
+          "line": 6,
+          "position": 170,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zs)) xs)",
+          "line": 5,
+          "position": 136,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(appendo zs ys zsys)",
+          "line": 7,
+          "position": 206,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zsys)) xsys)",
+          "line": 6,
+          "position": 170,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 12,
+          "content": "(== (quasiquote ((unquote x) unquote zs)) xs)",
+          "line": 5,
+          "position": 136,
+          "source": "C:\\Users\\Hazelstorm\\Desktop\\School\\ROP\\first-order-miniKanren\\tests.rkt"
+        },
+        {
+          "column": 56,
+          "content": "(appendo xs ys (quote (1 2 3)))",
+          "line": 3,
+          "position": 152,
+          "source": "2-interactions from an unsaved editor"
+        }
+      ],
+      "stack": [],
+      "sub": [
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "ys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": []
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": []
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zsys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": []
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "x"
+            }
+          },
+          "t2": {
+            "type": "num",
+            "value": 3
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "x"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "zs"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zsys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "num",
+                "value": 3
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "x"
+            }
+          },
+          "t2": {
+            "type": "num",
+            "value": 2
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "x"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "zs"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "zsys"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "num",
+                "value": 2
+              },
+              {
+                "type": "num",
+                "value": 3
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "x"
+            }
+          },
+          "t2": {
+            "type": "num",
+            "value": 1
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": "xs"
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "x"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "zs"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "t1": {
+            "type": "var",
+            "value": {
+              "name": false
+            }
+          },
+          "t2": {
+            "type": "lst",
+            "value": [
+              {
+                "type": "var",
+                "value": {
+                  "name": "xs"
+                }
+              },
+              {
+                "type": "var",
+                "value": {
+                  "name": "ys"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "types": []
+    }
+  ]
+}
