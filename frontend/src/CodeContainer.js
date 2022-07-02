@@ -1,29 +1,28 @@
-import { useEffect } from "react";
+import {useEffect, useLayoutEffect, useState} from "react";
 import Prism from "./prism.js";
 import "./prism.css"
 
-export default function CodeContainer () {
+export default function CodeContainer ({code, debug}) {
 
-  useEffect(() => {
-    Prism.highlightAll();
-  }, []);
-
-  const codePoint = () => {
+  const programPoint = () => {
     alert("test");
-  }
+  };
+
+  useLayoutEffect(() => {
+    Prism.highlightAll();
+  }, [code]);
 
   return (
     <div className="code-container">
-      <pre>
-        <code className="language-racket line-numbers">
-          <span onMouseEnter={codePoint}>(require racket/syntax)</span>
-          {'\n'}
-          (syntax (+ 2 (- 2 3)))
-          asdf
-          a
-          sdffffffffd
-        </code>
-      </pre>
+      <pre><code className="language-racket">
+          {code.split("\n").map((line, index) => {
+            if (line.length > 50) {
+              return <span key={index} style={{background: "red"}}>{line+"\n"}</span>
+            } else {
+              return <span key={index}>{line+"\n"}</span>;
+            }
+          })}
+      </code></pre>
     </div>
   )
 }

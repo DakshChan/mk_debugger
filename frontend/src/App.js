@@ -1,14 +1,18 @@
 import './App.css';
 import CodeContainer from "./CodeContainer";
+import UploadCode from "./UploadCode";
+import DebuggerPanel from "./DebuggerPanel";
+import { useState, useEffect } from "react";
 
 function App() {
-
-  const code = `<span class="highlight-inline" onmouseover="alert('test')">(require racket/syntax)</span>
-(syntax (+ 2 (- 2 3)))`;
+  const [code, setCode] = useState('');
+  const [debug, setDebug] = useState({});
 
   return (
     <>
-      <CodeContainer code={code}></CodeContainer>
+      <DebuggerPanel setDebug={setDebug}/>
+      <UploadCode setCode={setCode}/>
+      <CodeContainer code={code} debug={debug}></CodeContainer>
     </>
   );
 }
