@@ -6,9 +6,10 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "express": "~4.16.1",
     "child_process": "^1.0.2",
     "cors": "^2.8.5",
-    "express-form-data": "^2.0.18"
+    "express": "~4.16.1",
+    "express-form-data": "^2.0.18",
+    "tmp": "^0.2.1"
   }
 }

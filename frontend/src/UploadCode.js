@@ -17,6 +17,8 @@ export default function UploadCode({setCode}) {
     axios.post(url, formData, config).then((response) => {
       console.log(response.status);
       setCode(response.data);
+    }).catch((error) => {
+      console.log(error);
     });
   }
 

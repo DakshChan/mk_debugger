@@ -348,12 +348,14 @@
          (line     (syntax-line syntax))
          (column   (syntax-column syntax))
          (position (syntax-position syntax))
-         (content  (~s (syntax->datum syntax))))
+         (content  (~s (syntax->datum syntax)))
+         (span     (syntax-span syntax)))
     (hash 'source   source
           'line     line
           'column   column
           'position position
-          'content  content)))
+          'content  content
+          'span     span)))
 
 (define (sub/jsexpr sub)
   (let ((t1 (term/jsexpr (car sub)))

@@ -18,6 +18,10 @@
  run*
  run*/debug
  run*/debug*
+ run/json
+ run*/json
+ run*/debug/json
+ run*/debug*/json
 
  stream-take
  conj*

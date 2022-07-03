@@ -6,12 +6,12 @@ import { useState, useEffect } from "react";
 
 function App() {
   const [code, setCode] = useState('');
-  const [debug, setDebug] = useState({});
+  const [debug, setDebug] = useState();
 
   return (
     <>
-      <DebuggerPanel setDebug={setDebug}/>
       <UploadCode setCode={setCode}/>
+      <DebuggerPanel setDebug={setDebug}/>
       <CodeContainer code={code} debug={debug}></CodeContainer>
     </>
   );
