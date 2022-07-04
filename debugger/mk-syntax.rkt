@@ -88,7 +88,7 @@
     ((_ (x ...) g0 gs ...)
      (let* ((x (var/fresh 'x)) ...
             (st (car (stream-take #f 0 (pause empty-state (== (list x ...) initial-var)))))
-            (st (clear-state-path st))
+            (st (empty-state-path st))
             (g (conj* g0 gs ...)))
        (pp-map-reset!)
        (failed-lst-reset!)
