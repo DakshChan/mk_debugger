@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import "./DebuggerPanel.css";
 
 export default function DebuggerPanel({setDebug}) {
   const {register, handleSubmit, errors} = useForm();
@@ -17,15 +18,17 @@ export default function DebuggerPanel({setDebug}) {
 
   return (
     <>
-      <form onSubmit={handleSubmit(executeQuery)}>
+      <form className={"panelForm"} onSubmit={handleSubmit(executeQuery)}>
         <button>Run</button>
-        <label>Number of solutions</label>
+        <label>Solutions</label>
         <input type={"number"} {...register("solutionNum")} defaultValue={-1}/>
-        <label>Number of failed states to sample</label>
+        <label>Samples</label>
         <input type={"number"} {...register("sampleNum")} defaultValue={-1}/>
-        <label>Query to run</label>
+        <label>Query</label>
         <input type={"text"} {...register("query")} defaultValue={''}/>
       </form>
     </>
   );
 }
+
+

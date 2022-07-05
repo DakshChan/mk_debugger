@@ -1,0 +1,12 @@
+.panelForm {
+    flex: 1;
+}
+.panelForm input, label {
+    margin-left: 0.5em;
+}
+.panelForm input[type="number"] {
+    width: 2em;
+}
+.panelForm input[type="text"] {
+    width: 20em;
+}

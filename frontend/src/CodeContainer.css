@@ -1,0 +1,7 @@
+.code-container, .code-container pre {
+    width: fit-content;
+}
+.code-container pre code {
+    max-height: 90vh;
+    width: 30vw;
+}

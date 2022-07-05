@@ -67,6 +67,7 @@ app.post('/debug', (req, res) => {
   fs.writeFileSync(tmpRunnerFile.name, code_statement);
 
   const racket = spawnSync('racket.exe', [tmpRunnerFile.name]);
+
   if (racket.stderr.toString() !== "") {
     res.status(400).send(racket.stderr.toString());
   } else {
