@@ -11,7 +11,8 @@
  (struct-out pop)
  pp-map
  pp-map-reset!
- pp-map-add!
+ pp-map-add-count!
+ pp-map-add-fails!
  failed-lst
  failed-count
  failed-lst-reset!
@@ -26,11 +27,15 @@
 (define (pp-map-reset!)
   (set! pp-map (make-hash '())))
 
-(define (pp-map-add! stx)
+(define (pp-map-add-count! stx)
   (let ((ref (hash-ref pp-map stx #f)))
     (if ref
-        (hash-set! pp-map stx (+ ref 1))
-        (hash-set! pp-map stx 1))))
+        (hash-set! pp-map stx `(,(+ (car ref) 1) . ,(cdr ref)))
+        (hash-set! pp-map stx '(1 . 0)))))
+
+(define (pp-map-add-fails! stx)
+  (let ((ref (hash-ref pp-map stx))) ; we will never fail to reference a rejected program point
+    (hash-set! pp-map stx `(,(car ref) . ,(+ (cdr ref) 1)))))
 
 (define failed-lst '())
 (define failed-count 0)
@@ -40,11 +45,15 @@
 
 ; same as state->stream but uniformly randomly tracks failed states
 ; in a list with a maximum capacity of n (where n>=0)
+; oldst is st before having applied the current goal
 (define (state->stream/log-fails! st oldst n)
   (let ((s (state->stream st))
         (len (length failed-lst)))
     (cond ((not s)
            (set! failed-count (+ failed-count 1))
+           (pp-map-add-fails! (car (state-path oldst)))
+           (for-each (lambda (stx) (pp-map-add-fails! stx))
+                     (state-stack oldst))
            (if n
                (if (< len n)
                    (add-failed! oldst)
@@ -83,22 +92,13 @@
      (step (bind (pause st g1) g2) n))
     ((relate thunk _ stx)
      (begin
-       (pp-map-add! stx)
-       ;(println "Adding syntax to stack...")
-       ;(printf "~s -> ~s\n"
-       ;        (map (lambda (stx) (syntax->datum stx)) (state-stack st))
-       ;        (map (lambda (stx) (syntax->datum stx)) (cons stx (state-stack st))))
+       (pp-map-add-count! stx)
        (pause (extend-state-path/stack st stx) (conj (thunk) (pop)))))
     ((pop)
-     (begin
-       ;(println "Popping syntax from stack...")
-       ;(printf "~s -> ~s\n"
-       ;        (map (lambda (stx) (syntax->datum stx)) (state-stack st))
-       ;        (map (lambda (stx) (syntax->datum stx)) (cdr (state-stack st))))
-       (state->stream (pop-state-stack st))))
+     (state->stream (pop-state-stack st)))
     ((prim type ts stx)
      (begin
-       (pp-map-add! stx)
+       (pp-map-add-count! stx)
        (let ((newst (extend-state-path st stx)))
          (state->stream/log-fails!
           (match* (type ts)

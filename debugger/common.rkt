@@ -374,9 +374,11 @@
 
 (define (program-points/jsexpr pp-map)
   (map (lambda (key) (let ((syntax (syntax/jsexpr key))
-                           (count  (hash-ref pp-map key)))
+                           (count  (car (hash-ref pp-map key)))
+                           (fails  (cdr (hash-ref pp-map key))))
                        (hash 'syntax syntax
-                             'count  count)))
+                             'count  count
+                             'fails fails)))
        (hash-keys pp-map)))
 
 (define (syntax/jsexpr syntax)
