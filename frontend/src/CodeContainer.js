@@ -8,7 +8,22 @@ import Temp from "./Temp";
 
 export default function CodeContainer ({code, debug, codeHighlight, setPointDebug}) {
   const [parsedLines, setParsedLines] = useState([]);
-  const [range, setRange] = useState({max: 0, min: 0});
+  const [range, setRange] = useState({encounters: {max: 0, min: 0}, failures: {max: 0, min: 0}});
+  const [scroll, setScroll] = useState(0);
+
+  function handleScroll(e) {
+    setScroll(e.target.scrollTop);
+  }
+
+  useLayoutEffect(() => {
+    console.log("scroll");
+    let a = document.getElementById("code-container-main");
+    console.log(a);
+      if (a !== null) {
+        a.scroll({top: scroll});
+        console.log(scroll);
+      }
+  }, [code, codeHighlight]);
 
   useEffect(() => {
     if (debug !== undefined) {
@@ -16,22 +31,30 @@ export default function CodeContainer ({code, debug, codeHighlight, setPointDebu
     }
   }, [debug]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     Prism.highlightAll();
-  }, [code, parsedLines]);
+  }, [code, parsedLines, codeHighlight, range]);
+
+  useEffect(() => {
+    console.log(code);
+  }, [code]);
 
   useEffect(() => {
     if (codeHighlight.info === "encounters") {
-      let max = Number.MIN_SAFE_INTEGER;
-      let min = Number.MAX_SAFE_INTEGER;
+      let maxEncounter = Number.MIN_SAFE_INTEGER;
+      let minEncounter = Number.MAX_SAFE_INTEGER;
+      let maxFailure = Number.MIN_SAFE_INTEGER;
+      let minFailure = Number.MAX_SAFE_INTEGER;
 
       if (debug !== undefined){
         for (let i = 0; i < debug["program-points"].length; i++) {
-          max = debug["program-points"][i]["count"] > max ? debug["program-points"][i]["count"] : max;
-          min = debug["program-points"][i]["count"] < min ? debug["program-points"][i]["count"] : min;
+          maxEncounter = debug["program-points"][i]["count"] > maxEncounter ? debug["program-points"][i]["count"] : maxEncounter;
+          minEncounter = debug["program-points"][i]["count"] < minEncounter ? debug["program-points"][i]["count"] : minEncounter;
+          maxFailure = debug["program-points"][i]["fails"] > maxFailure ? debug["program-points"][i]["fails"] : maxFailure;
+          minFailure = debug["program-points"][i]["fails"] < minFailure ? debug["program-points"][i]["fails"] : minFailure;
         }
       }
-      setRange({max: max, min: min});
+      setRange({encounters: {max: maxEncounter, min: minEncounter}, failures: {max: maxFailure, min: minFailure}});
     } else if (codeHighlight.info === "failures") {
       //tbd when failure data is available
     }
@@ -62,7 +85,7 @@ export default function CodeContainer ({code, debug, codeHighlight, setPointDebu
   if (debug !== undefined) {
     return (
       <div className="code-container" key={md5(code + JSON.stringify(debug) + JSON.stringify(codeHighlight))}>
-      <pre className="line-numbers"><code className="language-racket match-braces">
+        <pre className="line-numbers"><code id="code-container-main" className="language-racket match-braces" onScroll={handleScroll}>
           {
             parsedLines.map((line, index) => {
               if (line.data !== undefined) {
@@ -72,13 +95,13 @@ export default function CodeContainer ({code, debug, codeHighlight, setPointDebu
               }
             })
           }
-      </code></pre>
+        </code></pre>
       </div>
     )
   } else {
     return (
       <div className="code-container" key={md5(code)}>
-        <pre className="line-numbers"><code className="language-racket match-braces">
+        <pre className="line-numbers"><code id="code-container-main" className="language-racket match-braces" onScroll={handleScroll}>
           {code.split("\n").map((line, index) => {
             return <span key={index}>{line + "\n"}</span>
           })

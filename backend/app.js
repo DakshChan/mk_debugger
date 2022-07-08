@@ -66,14 +66,18 @@ app.post('/debug', (req, res) => {
   console.log(code_statement);
   fs.writeFileSync(tmpRunnerFile.name, code_statement);
 
-  const racket = spawnSync('racket.exe', [tmpRunnerFile.name]);
+  const racket = spawnSync('racket.exe', [tmpRunnerFile.name], {maxBuffer: Number.MAX_SAFE_INTEGER});
 
   if (racket.stderr.toString() !== "") {
     res.status(400).send(racket.stderr.toString());
   } else {
+    console.log(racket.stdout.toString().length);
     let resultJSON = JSON.parse(racket.stdout.toString());
+    // console.log(racket.stdout.toString());
     //filter out initial debugger query
     resultJSON["program-points"] = resultJSON["program-points"].filter(x => x.syntax.source !== tmpRunnerFile.name)
+
+    // console.log(JSON.stringify(resultJSON));
     res.send(JSON.stringify(resultJSON));
   }
 });

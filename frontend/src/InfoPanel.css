@@ -1,0 +1,19 @@
+.point-info-panel, .solution-info-panel, .rejection-info-panel {
+    background-color: #f5f8fb;
+    margin: 1em;
+    padding: 1em;
+    border-radius: 1em;
+    display: flex;
+    flex-direction: column;
+    width: stretch;
+}
+
+
+.state-info-panel {
+    background-color: pink;
+    padding: 1em;
+    border-radius: 1em;
+    flex: 0 0;
+    overflow: auto;
+    width: stretch;
+}

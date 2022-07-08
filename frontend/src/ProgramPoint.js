@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, memo} from "react";
 
 export default function ProgramPoint({children, data, range, codeHighlight, setPointDebug}) {
 
@@ -14,11 +14,15 @@ export default function ProgramPoint({children, data, range, codeHighlight, setP
 
   function colorMap() {
     if (codeHighlight.info === "encounters") {
-      let c = Math.floor(rangeMap(data.count, range.min, range.max, 0, 255));
-      setColor(`rgba(${c}, 0, ${255 - c}, 40%)`);
+      let c = Math.floor(100 - (Math.pow(-1 *
+        rangeMap(data.count, range.encounters.min, range.encounters.max, 0, 1) + 1, 2.2)) * 100);
+      let c2 = Math.floor(rangeMap(c, 0, 100, 15, 70));
+      setColor(`rgba(255, 0, 0, ${c2}%)`);
     } else if (codeHighlight.info === "failures") {
-      //tbd when rejection data is available
-      setColor(`rgba(255, 0, 0, 40%)`);
+      let c = Math.floor(100 - (Math.pow(-1 *
+        rangeMap(data.fails, range.failures.min, range.failures.max, 0, 1) + 1, 2.2)) * 100);
+      let c2 = Math.floor(rangeMap(c, 0, 100, 15, 70));
+      setColor(`rgba(255, 0, 0, ${c2}%)`);
     } else {
       setColor(`rgba(0, 0, 0, 0%)`);
     }
@@ -28,6 +32,7 @@ export default function ProgramPoint({children, data, range, codeHighlight, setP
     colorMap();
   }, [range, codeHighlight]);
 
+  // if (codeHighlight.style === "color") {
   return (
     <>
       <span className="program-point" onClick={() => setPointDebug(data)} style={{background: color, borderRadius: "0.3em", outlineStyle:"solid", outlineColor: color, outlineWidth:"0.1em"}}>
@@ -35,4 +40,21 @@ export default function ProgramPoint({children, data, range, codeHighlight, setP
       </span>
     </>
   );
+  // } else if (codeHighlight.style === "bars") {
+  //   return (
+  //     <>
+  //         <span className="program-point" onClick={() => setPointDebug(data)} style={{background: color, borderRadius: "1em", outlineStyle:"solid", outlineColor: color, outlineWidth:"0.1em"}}>
+  //           {children}
+  //         </span>
+  //     </>
+  //   );
+  // } else {
+  //   return (
+  //     <>
+  //         <span className="program-point" onClick={() => setPointDebug(data)} style={{borderRadius: "0.3em", outlineStyle:"solid", outlineColor: "#000", outlineWidth:"0.1em"}}>
+  //           {children}
+  //         </span>
+  //     </>
+  //   );
+  // }
 }
