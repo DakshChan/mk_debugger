@@ -1,13 +1,13 @@
 (define-syntax define-relation
   (syntax-rules ()
     ((_ (name param ...) g ...)
-    (begin
-      (define (relation param ... stx)
-        (relate (lambda () (fresh () g ...)) `() stx))
-      (... (define-syntax (name stx)
-             (syntax-case stx ()
-               ((_ args ...)
-                #`(relation args ... #'#,stx)))))))))
+     (begin
+       (define (relation param ... stx)
+         (relate (lambda () (fresh () g ...)) `() stx))
+       (... (define-syntax (name stx)
+              (syntax-case stx ()
+                ((_ args ...)
+                 #`(relation args ... #'#,stx)))))))))
 
 ;; Low-level goals
 (define succeed (== #t #t))
@@ -86,43 +86,35 @@
 (define-syntax query/fresh
   (syntax-rules ()
     ((_ (x ...) g0 gs ...)
-     (let* ((x (var/fresh 'x)) ...
-            (st (car (stream-take #f 0 (pause empty-state (== (list x ...) initial-var)))))
-            (st (empty-state-path st))
-            (g (conj* g0 gs ...)))
-       (pp-map-reset!)
-       (failed-lst-reset!)
-       (pause st g)))))
+     (begin
+       (set-step-count #f)
+       (let* ((x (var/fresh 'x)) ...
+              (st (car (stream-take #f 0 (pause empty-state (== (list x ...) initial-var)))))
+              (st (empty-state-path st))
+              (g (conj* g0 gs ...)))
+         (pp-map-reset!)
+         (failed-lst-reset!)
+         (pause st g))))))
 
 (define (stream-take n m s)
-  (if (eqv? 0 n) '()
-    (let ((s (mature s m)))
-      (if (pair? s)
-        (cons (car s) (stream-take (and n (- n 1)) m (cdr s)))
-        '()))))
+  (if (eqv? 0 n)
+      '()
+      (let ((s (mature s m)))
+        (if (pair? s) 
+            (cons (car s) (stream-take (and n (- n 1)) m (cdr s)))
+            '()))))
 
+(define (stream-take/format-out n m i j s)
+  (set-step-count i)
+  (let ((out (stream-take n m s)))
+    (if j
+        (debug/json out pp-map failed-lst)
+        (map reify/initial-var out))))
+
+; n -- number of results to take (or #f for all)
+; m -- number of failures to track (or #f for all)
+; i -- number of steps to take (or #f for all)
+; j -- #t to format output as JSON, #f otherwise
 (define-syntax run
   (syntax-rules ()
-    ((_ n m body ...) (map reify/initial-var (stream-take n m (query/fresh body ...))))))
-
-(define-syntax run*
-  (syntax-rules () ((_ body ...) (run #f 0 body ...))))
-
-(define-syntax run*/debug
-  (syntax-rules () ((_ m body ...) (run #f m body ...))))
-
-(define-syntax run*/debug*
-  (syntax-rules () ((_ body ...) (run*/debug #f body ...))))
-
-(define-syntax run/json
-  (syntax-rules ()
-    ((_ n m body ...) (debug/json (stream-take n m (query/fresh body ...)) pp-map failed-lst))))
-
-(define-syntax run*/json
-  (syntax-rules () ((_ body ...) (run/json #f 0 body ...))))
-
-(define-syntax run*/debug/json
-  (syntax-rules () ((_ m body ...) (run/json #f m body ...))))
-
-(define-syntax run*/debug*/json
-  (syntax-rules () ((_ body ...) (run*/debug/json #f body ...))))
+    ((_ n m i j body ...) (stream-take/format-out n m i j (query/fresh body ...)))))

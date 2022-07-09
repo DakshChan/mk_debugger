@@ -373,12 +373,15 @@
           'stack    stack)))
 
 (define (program-points/jsexpr pp-map)
-  (map (lambda (key) (let ((syntax (syntax/jsexpr key))
-                           (count  (car (hash-ref pp-map key)))
-                           (fails  (cdr (hash-ref pp-map key))))
-                       (hash 'syntax syntax
-                             'count  count
-                             'fails fails)))
+  (map (lambda (stx) (let* ((syntax     (syntax/jsexpr stx))
+                            (pp         (hash-ref pp-map stx #f))
+                            (count      (hash-ref pp 'count #f))
+                            (successes  (hash-ref pp 'successes #f))
+                            (fails      (hash-ref pp 'fails #f)))
+                       (hash 'syntax    syntax
+                             'count     count
+                             'successes successes
+                             'fails     fails)))
        (hash-keys pp-map)))
 
 (define (syntax/jsexpr syntax)

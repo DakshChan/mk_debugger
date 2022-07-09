@@ -11,11 +11,13 @@
  (struct-out pop)
  pp-map
  pp-map-reset!
- pp-map-add-count!
- pp-map-add-fails!
  failed-lst
- failed-count
  failed-lst-reset!
+ step-count
+ increment-step-count
+ decrement-step-count
+ step-count-depleted?
+ set-step-count
  step
  mature
  mature?)
@@ -30,12 +32,16 @@
 (define (pp-map-add-count! stx)
   (let ((ref (hash-ref pp-map stx #f)))
     (if ref
-        (hash-set! pp-map stx `(,(+ (car ref) 1) . ,(cdr ref)))
-        (hash-set! pp-map stx '(1 . 0)))))
+        (hash-set! pp-map stx (hash-set ref 'count (+ 1 (hash-ref ref 'count #f))))
+        (hash-set! pp-map stx (make-immutable-hash '((count . 1) (successes . 0) (fails . 0)))))))
+
+(define (pp-map-add-successes! stx)
+  (let ((ref (hash-ref pp-map stx))) ; we will never fail to reference a succeeding program point
+    (hash-set! pp-map stx (hash-set ref 'successes (+ 1 (hash-ref ref 'successes #f))))))
 
 (define (pp-map-add-fails! stx)
   (let ((ref (hash-ref pp-map stx))) ; we will never fail to reference a rejected program point
-    (hash-set! pp-map stx `(,(car ref) . ,(+ (cdr ref) 1)))))
+    (hash-set! pp-map stx (hash-set ref 'fails (+ 1 (hash-ref ref 'fails #f))))))
 
 (define failed-lst '())
 (define failed-count 0)
@@ -43,10 +49,24 @@
 (define (failed-lst-reset!)
   (set! failed-lst '()))
 
+(define step-count 0)
+
+(define (set-step-count n)
+  (set! step-count n))
+
+(define (increment-step-count)
+  (set! step-count (and step-count (+ step-count 1))))
+
+(define (decrement-step-count)
+  (set! step-count (and step-count (- step-count 1))))
+
+(define (step-count-depleted?)
+  (and step-count (<= step-count 0)))
+
 ; same as state->stream but uniformly randomly tracks failed states
 ; in a list with a maximum capacity of n (where n>=0)
 ; oldst is st before having applied the current goal
-(define (state->stream/log-fails! st oldst n)
+(define (state->stream/log st oldst n)
   (let ((s (state->stream st))
         (len (length failed-lst)))
     (cond ((not s)
@@ -59,7 +79,8 @@
                    (add-failed! oldst)
                    (cond ((> n (* (random) failed-count))) ; eqv to (n/failed-count) chance of success
                          (replace-random-failed! oldst)))
-               (add-failed! oldst))))
+               (add-failed! oldst)))
+          (else (pp-map-add-successes! (car (state-path oldst)))))
     s))
 
 (define (replace-random-failed! x)
@@ -91,27 +112,32 @@
     ((conj g1 g2)
      (step (bind (pause st g1) g2) n))
     ((relate thunk _ stx)
-     (begin
-       (pp-map-add-count! stx)
-       (pause (extend-state-path/stack st stx) (conj (thunk) (pop)))))
+     (and (not (step-count-depleted?))
+          (begin
+            (decrement-step-count)
+            (pp-map-add-count! stx)
+            (pause (extend-state-path/stack st stx) (conj (thunk) (pop))))))
     ((pop)
+     (pp-map-add-successes! (car (state-stack st)))
      (state->stream (pop-state-stack st)))
     ((prim type ts stx)
-     (begin
-       (pp-map-add-count! stx)
-       (let ((newst (extend-state-path st stx)))
-         (state->stream/log-fails!
-          (match* (type ts)
-            (('==          (list t1 t2)) (unify t1 t2 newst))
-            (('=/=         (list t1 t2)) (disunify t1 t2 newst))
-            (('symbolo     (list t))     (typify t symbol? newst))
-            (('stringo     (list t))     (typify t string? newst))
-            (('numbero     (list t))     (typify t number? newst))
-            (('not-symbolo (list t))     (distypify t symbol? newst))
-            (('not-stringo (list t))     (distypify t string? newst))
-            (('not-numbero (list t))     (distypify t number? newst)))
-          newst
-          n))))))
+     (and (not (step-count-depleted?))
+          (begin
+            (decrement-step-count)
+            (pp-map-add-count! stx)
+            (let ((newst (extend-state-path st stx)))
+              (state->stream/log
+               (match* (type ts)
+                 (('==          (list t1 t2)) (unify t1 t2 newst))
+                 (('=/=         (list t1 t2)) (disunify t1 t2 newst))
+                 (('symbolo     (list t))     (typify t symbol? newst))
+                 (('stringo     (list t))     (typify t string? newst))
+                 (('numbero     (list t))     (typify t number? newst))
+                 (('not-symbolo (list t))     (distypify t symbol? newst))
+                 (('not-stringo (list t))     (distypify t string? newst))
+                 (('not-numbero (list t))     (distypify t number? newst)))
+               newst
+               n)))))))
 
 (define (step s n)
   (match s
