@@ -86,33 +86,31 @@
 (define-syntax query/fresh
   (syntax-rules ()
     ((_ (x ...) g0 gs ...)
-     (begin
-       (set-step-count #f)
-       (let* ((x (var/fresh 'x)) ...
-              (st (car (stream-take #f 0 (pause empty-state (== (list x ...) initial-var)))))
-              (st (empty-state-path st))
-              (g (conj* g0 gs ...)))
-         (query-reset! (pause st g))
-         (pause st g))))))
+     (let* ((x (var/fresh 'x)) ...
+            (st (car (car (stream-take #f #f (pause empty-state (== (list x ...) initial-var))))))
+            (st (empty-state-path st))
+            (g (conj* g0 gs ...)))
+       (reset-globals!)
+       (pause st g)))))
 
-(define (stream-take n m s)
-  (if (or (eqv? 0 n) (step-count-depleted?))
-      '()
-      (let ((s (mature s m)))
-        (if (pair? s)
-            (begin
-              (set-paused-stream! (cdr s))
-              (cons (car s) (stream-take (and n (- n 1)) m (cdr s))))
-            '()))))
+(define (stream-take-helper n i s acc) ; n(solns) i(steps)
+  (cond ((or (and n (= n 0)) (and i (= i 0)) (not s)) `(,(reverse acc) . ,s))
+        ((not (mature? s)) (stream-take-helper n (and i (- i 1)) (step s) acc))
+        (else (stream-take-helper (and n (- n 1)) i (cdr s) (cons (car s) acc)))))
+
+(define (stream-take n i s)
+  (stream-take-helper n i s '()))
 
 (define (stream-take/format-out n m i j s)
-  (set-step-count i)
-  (let* ((out     (stream-take n m s))
-         (out     (append paused-solns out)))
-    (set-paused-solns! out)
+  (set-failed-lst-size! m)
+  (let* ((out   (stream-take n i s))
+         (solns (car out))
+         (s     (cdr out)))
+    (set-paused-solns! (append paused-solns solns))
+    (set-paused-stream! s)
     (if j
-        (debug/json out pp-map failed-lst)
-        (map reify/initial-var out))))
+        (debug/json paused-solns pp-map failed-lst)
+        (map reify/initial-var paused-solns))))
 
 ; n -- number of results to take (or #f for all)
 ; m -- number of failures to track (or #f for all)

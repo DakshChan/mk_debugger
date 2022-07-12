@@ -7,6 +7,7 @@
  empty-state
  extend-state-path
  empty-state-path
+ last-from-state-path
  extend-state-path/stack
  pop-state-stack
  state->stream
@@ -154,6 +155,9 @@
 
 (define (empty-state-path st)
   (set-state-path st empty-path))
+
+(define (last-from-state-path st)
+  (car (state-path st)))
 
 (define (pop-state-stack st)
   (set-state-stack st (cdr (state-stack st))))
@@ -347,6 +351,8 @@
     ((eq? pred number?) 'not-num)
     (error "Invalid type")))
 
+; JSON Formatting
+
 (define (debug/json sts pp-map failed-lst)
   (write-json (debug/jsexpr sts pp-map failed-lst)))
 
@@ -434,20 +440,24 @@
 
 (define (term/jsexpr term)
   (let* ((type  (cond
-                  ((number? term) "num")
-                  ((string? term) "str")
-                  ((symbol? term) "sym")
-                  ((var?    term) "var")
-                  ((list?   term) "lst")
-                  ((pair?   term) "lst")))
+                  ((boolean? term) "bool")
+                  ((number?  term) "num")
+                  ((string?  term) "str")
+                  ((symbol?  term) "sym")
+                  ((var?     term) "var")
+                  ((list?    term) "lst")
+                  ((pair?    term) "lst")
+                  (else            "unk")))
          (value  (cond
-                   ((eqv? type "num") term)
-                   ((eqv? type "str") term)
-                   ((eqv? type "sym") (symbol->string term))
-                   ((eqv? type "var") (lvar/jsexpr term))
-                   ((eqv? type "lst") (if (list? term)
-                                          (map term/jsexpr term)
-                                          (list (term/jsexpr (car term)) (term/jsexpr (cdr term))))))))
+                   ((eqv? type "bool") term)
+                   ((eqv? type "num")  term)
+                   ((eqv? type "str")  term)
+                   ((eqv? type "sym")  (symbol->string term))
+                   ((eqv? type "var")  (lvar/jsexpr term))
+                   ((eqv? type "unk")  (~s term))
+                   ((eqv? type "lst")  (if (list? term)
+                                           (map term/jsexpr term)
+                                           (list (term/jsexpr (car term)) (term/jsexpr (cdr term))))))))
     (hash 'type  type
           'value value)))
 
