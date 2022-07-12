@@ -66,7 +66,7 @@
 (define failed-count 0)
 
 (define (state->stream/log st oldst)
-  (pp-map-add-count! (last-from-state-path st))
+  (pp-map-add-count! (last-from-state-path oldst))
   (let ((s (state->stream st))
         (len (length failed-lst)))
     (cond ((not s)
@@ -112,7 +112,9 @@
     ((conj g1 g2)
      (step (bind (pause st g1) g2)))
     ((relate thunk _ stx)
-     (pause (extend-state-path/stack st stx) (conj (thunk) (pop))))
+     (begin
+       (pp-map-add-count! stx)
+       (pause (extend-state-path/stack st stx) (conj (thunk) (pop)))))
     ((pop)
      (pp-map-add-successes! (car (state-stack st)))
      (state->stream (pop-state-stack st)))

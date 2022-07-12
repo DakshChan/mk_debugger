@@ -103,13 +103,14 @@
 
 (define (stream-take/format-out n m i j s)
   (set-failed-lst-size! m)
-  (let* ((out   (stream-take n i s))
-         (solns (car out))
-         (s     (cdr out)))
+  (let*-values (((out cpu real gc) (time-apply stream-take (list n i s)))
+                ((out)   (car out))
+                ((solns) (car out))
+                ((s)     (cdr out)))
     (set-paused-solns! (append paused-solns solns))
     (set-paused-stream! s)
     (if j
-        (debug/json paused-solns pp-map failed-lst)
+        (debug/json paused-solns pp-map failed-lst (list cpu real gc))
         (map reify/initial-var paused-solns))))
 
 ; n -- number of results to take (or #f for all)

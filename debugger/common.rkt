@@ -353,16 +353,18 @@
 
 ; JSON Formatting
 
-(define (debug/json sts pp-map failed-lst)
-  (write-json (debug/jsexpr sts pp-map failed-lst)))
+(define (debug/json sts pp-map failed-lst time)
+  (write-json (debug/jsexpr sts pp-map failed-lst time)))
 
-(define (debug/jsexpr sts pp-map failed-lst)
+(define (debug/jsexpr sts pp-map failed-lst time)
   (let ((solutions (map state/jsexpr sts))
         (rejected-states (map state/jsexpr failed-lst))
-        (program-points (program-points/jsexpr pp-map)))
+        (program-points (program-points/jsexpr pp-map))
+        (time (time/jsexpr time)))
     (hash 'solutions solutions
           'rejected-states rejected-states
-          'program-points program-points)))
+          'program-points program-points
+          'time time)))
 
 (define (state/jsexpr st)
   (let ((sub      (map sub/jsexpr     (state-sub st)))
@@ -467,3 +469,9 @@
                    (symbol->string var-name)
                    #f)))
     (hash 'name name)))
+
+(define/match (time/jsexpr time)
+  (((list cpu real gc))
+   (hash 'cpu  cpu
+         'real real
+         'gc   gc)))
