@@ -9,10 +9,13 @@
  (struct-out bind)
  (struct-out pause)
  (struct-out pop)
+ query-reset!
+ paused-stream
+ set-paused-stream!
+ paused-solns
+ set-paused-solns!
  pp-map
- pp-map-reset!
  failed-lst
- failed-lst-reset!
  step-count
  increment-step-count
  decrement-step-count
@@ -23,6 +26,20 @@
  mature?)
 
 (require "common.rkt")
+
+(define (query-reset! s)
+  (set-paused-stream! s)
+  (set-paused-solns! '())
+  (pp-map-reset!)
+  (failed-lst-reset!))
+
+(define paused-stream #f)
+(define (set-paused-stream! s)
+  (set! paused-stream s))
+
+(define paused-solns '())
+(define (set-paused-solns! lst)
+  (set! paused-solns lst))
 
 (define pp-map (make-hash '()))
 

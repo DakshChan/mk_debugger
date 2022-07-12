@@ -92,21 +92,24 @@
               (st (car (stream-take #f 0 (pause empty-state (== (list x ...) initial-var)))))
               (st (empty-state-path st))
               (g (conj* g0 gs ...)))
-         (pp-map-reset!)
-         (failed-lst-reset!)
+         (query-reset! (pause st g))
          (pause st g))))))
 
 (define (stream-take n m s)
-  (if (eqv? 0 n)
+  (if (or (eqv? 0 n) (step-count-depleted?))
       '()
       (let ((s (mature s m)))
-        (if (pair? s) 
-            (cons (car s) (stream-take (and n (- n 1)) m (cdr s)))
+        (if (pair? s)
+            (begin
+              (set-paused-stream! (cdr s))
+              (cons (car s) (stream-take (and n (- n 1)) m (cdr s))))
             '()))))
 
 (define (stream-take/format-out n m i j s)
   (set-step-count i)
-  (let ((out (stream-take n m s)))
+  (let* ((out     (stream-take n m s))
+         (out     (append paused-solns out)))
+    (set-paused-solns! out)
     (if j
         (debug/json out pp-map failed-lst)
         (map reify/initial-var out))))
@@ -118,3 +121,6 @@
 (define-syntax run
   (syntax-rules ()
     ((_ n m i j body ...) (stream-take/format-out n m i j (query/fresh body ...)))))
+
+(define (resume n m i j)
+  (stream-take/format-out n m i j paused-stream))
