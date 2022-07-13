@@ -65,7 +65,7 @@
 
 (define failed-count 0)
 
-(define (state->stream/log st oldst)
+(define (state->stream/log st oldst cx)
   (pp-map-add-count! (last-from-state-path oldst))
   (let ((s (state->stream st))
         (len (length failed-lst)))
@@ -76,10 +76,10 @@
                      (state-stack oldst))
            (if failed-lst-size
                (if (< len failed-lst-size)
-                   (add-failed! oldst)
+                   (add-failed! (cons oldst cx))
                    (cond ((> failed-lst-size (* (random) failed-count))) ; eqv to (n/failed-count) chance of success
-                         (replace-random-failed! oldst)))
-               (add-failed! oldst)))
+                         (replace-random-failed! (cons oldst cx))))
+               (add-failed! (cons oldst cx))))
           (else (pp-map-add-successes! (car (state-path oldst)))))
     s))
 
@@ -130,7 +130,7 @@
           (('not-symbolo (list t))     (distypify t symbol? st))
           (('not-stringo (list t))     (distypify t string? st))
           (('not-numbero (list t))     (distypify t number? st)))
-        st)))))
+        st (append (list type) ts))))))
 
 (define (step s)
   (match s

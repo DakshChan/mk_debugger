@@ -358,7 +358,7 @@
 
 (define (debug/jsexpr sts pp-map failed-lst time)
   (let ((solutions (map state/jsexpr sts))
-        (rejected-states (map state/jsexpr failed-lst))
+        (rejected-states (map failed-state/jsexpr failed-lst))
         (program-points (program-points/jsexpr pp-map))
         (time (time/jsexpr time)))
     (hash 'solutions solutions
@@ -367,18 +367,39 @@
           'time time)))
 
 (define (state/jsexpr st)
-  (let ((sub      (map sub/jsexpr     (state-sub st)))
+  (let ((binding  (reify/jsexpr       initial-var st))
+        (sub      (map sub/jsexpr     (state-sub st)))
         (diseq    (map diseq/jsexpr   (state-diseq st)))
         (types    (map type/jsexpr    (state-types st)))
         (distypes (map distype/jsexpr (state-distypes st)))
         (path     (map syntax/jsexpr  (state-path st)))
         (stack    (map syntax/jsexpr  (state-stack st))))
-    (hash 'sub      sub
+    (hash 'binding  binding
+          'sub      sub
           'diseq    diseq
           'types    types
           'distypes distypes
           'path     path
           'stack    stack)))
+
+(define/match (failed-state/jsexpr failed-state)
+  (((cons st cx))
+   (let ((binding  (reify/jsexpr       initial-var st))
+         (failed   (reify/jsexpr       cx st))
+         (sub      (map sub/jsexpr     (state-sub st)))
+         (diseq    (map diseq/jsexpr   (state-diseq st)))
+         (types    (map type/jsexpr    (state-types st)))
+         (distypes (map distype/jsexpr (state-distypes st)))
+         (path     (map syntax/jsexpr  (state-path st)))
+         (stack    (map syntax/jsexpr  (state-stack st))))
+     (hash 'binding  binding
+           'failed   failed
+           'sub      sub
+           'diseq    diseq
+           'types    types
+           'distypes distypes
+           'path     path
+           'stack    stack))))
 
 (define (program-points/jsexpr pp-map)
   (map (lambda (stx) (let* ((syntax     (syntax/jsexpr stx))
@@ -409,6 +430,14 @@
           'position position
           'content  content
           'span     span)))
+
+(define (reify/jsexpr tm st)
+  (let-values (((sub cxs)
+                (match (reify tm st)
+                  ((list (Ans walked-sub cxs) path) (values (~s walked-sub) (~s cxs)))
+                  ((list walked-sub path)           (values (~s walked-sub) "")))))
+    (hash 'sub sub
+          'cxs cxs)))
 
 (define (sub/jsexpr sub)
   (let ((t1 (term/jsexpr (car sub)))
