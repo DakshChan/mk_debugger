@@ -16,7 +16,7 @@ function App() {
   return (
     <div>
       <div>
-        <UploadCode setCode={setCode}/>
+        <UploadCode setCode={setCode} setDebug={setDebug}/>
         <DebuggerPanel setDebug={setDebug}/>
       </div>
       <div>
@@ -25,6 +25,8 @@ function App() {
           <input type={"radio"} name={"PP-Select"} defaultChecked={true} value={"encounters"}/>
           <label>Failures</label>
           <input type={"radio"} name={"PP-Select"} value={"failures"}/>
+          <label>Successes</label>
+          <input type={"radio"} name={"PP-Select"} value={"successes"}/>
         </div>
         {/*<select defaultValue={"color"} onChange={(event) => setCodeHighlight({...codeHighlight, "style": event.target.value})}>*/}
         {/*  <option value={"none"}>None</option>*/}
@@ -35,8 +37,8 @@ function App() {
           <CodeContainer code={code} debug={debug} codeHighlight={codeHighlight} setPointDebug={setPointDebug}/>
           <div style={{width: "-webkit-fill-available"}}>
             <PointInfoPanel pointDebug={pointDebug}/>
-            <SolutionInfoPanel debug={debug}/>
-            <RejectionInfoPanel debug={debug}/>
+            <SolutionInfoPanel debug={debug} code={code}/>
+            <RejectionInfoPanel debug={debug} code={code}/>
           </div>
         </div>
       </div>

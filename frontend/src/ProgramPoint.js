@@ -16,12 +16,26 @@ export default function ProgramPoint({children, data, range, codeHighlight, setP
     if (codeHighlight.info === "encounters") {
       let c = Math.floor(100 - (Math.pow(-1 *
         rangeMap(data.count, range.encounters.min, range.encounters.max, 0, 1) + 1, 2.2)) * 100);
-      let c2 = Math.floor(rangeMap(c, 0, 100, 15, 70));
+      let c2 = Math.floor(rangeMap(c, 0, 100, 10, 70));
+      if (data.count === 0) {
+        c2 = 0;
+      }
       setColor(`rgba(255, 0, 0, ${c2}%)`);
     } else if (codeHighlight.info === "failures") {
       let c = Math.floor(100 - (Math.pow(-1 *
         rangeMap(data.fails, range.failures.min, range.failures.max, 0, 1) + 1, 2.2)) * 100);
-      let c2 = Math.floor(rangeMap(c, 0, 100, 15, 70));
+      let c2 = Math.floor(rangeMap(c, 0, 100, 10, 70));
+      if (data.fails === 0) {
+        c2 = 0;
+      }
+      setColor(`rgba(255, 0, 0, ${c2}%)`);
+    } else if (codeHighlight.info === "successes") {
+      let c = Math.floor(100 - (Math.pow(-1 *
+        rangeMap(data.successes, range.successes.min, range.successes.max, 0, 1) + 1, 2.2)) * 100);
+      let c2 = Math.floor(rangeMap(c, 0, 100, 10, 70));
+      if (data.successes === 0) {
+        c2 = 0;
+      }
       setColor(`rgba(255, 0, 0, ${c2}%)`);
     } else {
       setColor(`rgba(0, 0, 0, 0%)`);
@@ -35,7 +49,7 @@ export default function ProgramPoint({children, data, range, codeHighlight, setP
   // if (codeHighlight.style === "color") {
   return (
     <>
-      <span className="program-point" onClick={() => setPointDebug(data)} style={{background: color, borderRadius: "0.3em", outlineStyle:"solid", outlineColor: color, outlineWidth:"0.1em"}}>
+      <span className="program-point" onClick={() => setPointDebug(data)} style={{background: color, borderRadius: "0.3em", outlineStyle:"solid", outlineColor: "#000", outlineWidth:"0.1em"}}>
         {children}
       </span>
     </>

@@ -15,6 +15,7 @@
  query
  query/fresh
  run
+ resume
 
  stream-take
  conj*

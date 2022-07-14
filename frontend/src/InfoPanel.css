@@ -6,14 +6,39 @@
     display: flex;
     flex-direction: column;
     width: stretch;
+    line-height: 0;
 }
 
 
 .state-info-panel {
+    line-height: normal;
     background-color: pink;
     padding: 1em;
     border-radius: 1em;
     flex: 0 0;
     overflow: auto;
     width: stretch;
+}
+
+.point-info-panel h3, .point-info-panel p {
+    margin-top: 0.7em;
+    margin-bottom: 0.7em;
+}
+
+.point-info-panel p {
+    padding-right: 3ch;
+}
+
+.point-info-panel p:last-child {
+    padding-right: 0;
+}
+
+.solution-info-panel h3, .solution-info-panel p {
+    margin-top: 0.7em;
+    margin-bottom: 0.7em;
+}
+
+.rejection-info-panel h3, .rejection-info-panel p {
+    margin-top: 0.7em;
+    margin-bottom: 0.7em;
 }

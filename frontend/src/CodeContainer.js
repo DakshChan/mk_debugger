@@ -8,7 +8,7 @@ import Temp from "./Temp";
 
 export default function CodeContainer ({code, debug, codeHighlight, setPointDebug}) {
   const [parsedLines, setParsedLines] = useState([]);
-  const [range, setRange] = useState({encounters: {max: 0, min: 0}, failures: {max: 0, min: 0}});
+  const [range, setRange] = useState({encounters: {max: 0, min: 0}, failures: {max: 0, min: 0}, successes: {max: 0, min: 0}});
   const [scroll, setScroll] = useState(0);
 
   function handleScroll(e) {
@@ -45,6 +45,8 @@ export default function CodeContainer ({code, debug, codeHighlight, setPointDebu
       let minEncounter = Number.MAX_SAFE_INTEGER;
       let maxFailure = Number.MIN_SAFE_INTEGER;
       let minFailure = Number.MAX_SAFE_INTEGER;
+      let maxSuccess = Number.MIN_SAFE_INTEGER;
+      let minSuccess = Number.MAX_SAFE_INTEGER;
 
       if (debug !== undefined){
         for (let i = 0; i < debug["program-points"].length; i++) {
@@ -52,9 +54,13 @@ export default function CodeContainer ({code, debug, codeHighlight, setPointDebu
           minEncounter = debug["program-points"][i]["count"] < minEncounter ? debug["program-points"][i]["count"] : minEncounter;
           maxFailure = debug["program-points"][i]["fails"] > maxFailure ? debug["program-points"][i]["fails"] : maxFailure;
           minFailure = debug["program-points"][i]["fails"] < minFailure ? debug["program-points"][i]["fails"] : minFailure;
+          maxSuccess = debug["program-points"][i]["successes"] > maxSuccess ? debug["program-points"][i]["successes"] : maxSuccess;
+          minSuccess = debug["program-points"][i]["successes"] < minSuccess ? debug["program-points"][i]["successes"] : minSuccess;
         }
       }
-      setRange({encounters: {max: maxEncounter, min: minEncounter}, failures: {max: maxFailure, min: minFailure}});
+      setRange({encounters: {max: maxEncounter, min: minEncounter},
+        failures: {max: maxFailure, min: minFailure}, successes:
+      {max: maxSuccess, min: minSuccess}});
     } else if (codeHighlight.info === "failures") {
       //tbd when failure data is available
     }

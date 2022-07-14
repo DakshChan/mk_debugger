@@ -7,10 +7,18 @@ export default function PointInfoPanel({pointDebug}) {
     return (
       <div className={"point-info-panel"}>
         <h3>Point Panel</h3>
-        <p>Encounters: {pointDebug.count}</p>
-        <p>Failures: {pointDebug.fails}</p>
-        <p>Line: {pointDebug.syntax.line}</p>
-        <p>Column: {pointDebug.syntax.column}</p>
+        <div style={{display: "flex"}}>
+          <p>{`Encounters: ${pointDebug.count}`}</p>
+          <p>{`Failures: ${pointDebug.fails}`}</p>
+          <p>{`Successes: ${pointDebug.successes}`}</p>
+        </div>
+        <div style={{display: "flex"}}>
+          <p>Line: {pointDebug.syntax.line}</p>
+          <p>Column: {pointDebug.syntax.column}</p>
+        </div>
+        <div>
+            <p>Syntax: {pointDebug.syntax.content}</p>
+        </div>
       </div>
     );
   } else {

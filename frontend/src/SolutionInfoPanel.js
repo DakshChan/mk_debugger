@@ -2,7 +2,7 @@ import "./InfoPanel.css"
 import StateInfoPanel from "./StateInfoPanel";
 import {useState} from "react";
 
-export default function SolutionInfoPanel({debug}) {
+export default function SolutionInfoPanel({debug, code}) {
   const [state, setState] = useState(undefined);
 
   function handleStateSelect(e) {
@@ -28,7 +28,7 @@ export default function SolutionInfoPanel({debug}) {
               <p>{"0-" + (debug.solutions.length - 1)}</p>
               <input type={"number"} min={0} max={debug.solutions.length - 1}
                      placeholder={"0-" + (debug.solutions.length - 1)} onInput={handleStateSelect}/>
-              {state !== "" ? <StateInfoPanel state={state}/> : <p>Select state</p>}
+              {state !== "" ? <StateInfoPanel state={state} code={code}/> : <p>Select state</p>}
             </> :
             <p>No solutions</p>
         }
