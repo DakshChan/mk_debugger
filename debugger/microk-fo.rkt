@@ -91,14 +91,14 @@
 
 ;; First Order microKanren
 
-(struct disj     (g1 g2)                  #:prefab)
-(struct conj     (g1 g2)                  #:prefab)
-(struct relate   (thunk description stx)  #:prefab)
-(struct prim     (name ts stx)            #:prefab)
-(struct bind     (s g)                    #:prefab)
-(struct mplus    (s1 s2)                  #:prefab)
-(struct pause    (st g)                   #:prefab)
-(struct pop      ()                       #:prefab)
+(struct disj     (g1 g2)       #:prefab)
+(struct conj     (g1 g2)       #:prefab)
+(struct relate   (thunk stx)   #:prefab)
+(struct prim     (name ts stx) #:prefab)
+(struct bind     (s g)         #:prefab)
+(struct mplus    (s1 s2)       #:prefab)
+(struct pause    (st g)        #:prefab)
+(struct pop      ()            #:prefab)
 
 (define (mature? s) (or (not s) (pair? s)))
 (define (mature s)
@@ -111,7 +111,7 @@
                   (pause st g2))))
     ((conj g1 g2)
      (step (bind (pause st g1) g2)))
-    ((relate thunk _ stx)
+    ((relate thunk stx)
      (begin
        (pp-map-add-count! stx)
        (pause (extend-state-path/stack st stx) (conj (thunk) (pop)))))

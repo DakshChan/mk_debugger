@@ -1,15 +1,5 @@
-(define-syntax define-relation
-  (syntax-rules ()
-    ((_ (name param ...) g ...)
-     (begin
-       (define (relation param ... stx)
-         (relate (lambda () (fresh () g ...)) `() stx))
-       (... (define-syntax (name stx)
-              (syntax-case stx ()
-                ((_ args ...)
-                 #`(relation args ... #'#,stx)))))))))
-
 ;; Low-level goals
+
 (define succeed (== #t #t))
 (define fail    (== #f #t))
 (define-syntax conj*
@@ -25,47 +15,39 @@
     ((_ g0 gs ...) (disj g0 (disj* gs ...)))))
 
 ;; Primitive goals
-(define-syntax (== stx)
-  (syntax-case stx ()
-    ((_ t1 t2)
-     #`(prim '== (list t1 t2) #'#,stx))))
 
-(define-syntax (=/= stx)
-  (syntax-case stx ()
-    ((_ t1 t2)
-     #`(prim '=/= (list t1 t2) #'#,stx))))
+(define-syntax define-prim
+  (syntax-rules ()
+    ((_ name param ...)
+     (define-syntax (name stx)
+       (syntax-case stx ()
+         ((_ param ...)
+          #`(prim 'name (list param ...) #'#,stx)))))))
 
-(define-syntax (symbolo stx)
-  (syntax-case stx ()
-    ((_ t)
-     #`(prim 'symbolo (list t) #'#,stx))))
+(define-prim ==          t1 t2)
+(define-prim =/=         t1 t2)
+(define-prim symbolo     t)
+(define-prim stringo     t)
+(define-prim numbero     t)
+(define-prim not-symbolo t)
+(define-prim not-stringo t)
+(define-prim not-numebro t)
 
-(define-syntax (stringo stx)
-  (syntax-case stx ()
-    ((_ t)
-     #`(prim 'stringo (list t) #'#,stx))))
+;; User-defined relations
 
-(define-syntax (numbero stx)
-  (syntax-case stx ()
-    ((_ t)
-     #`(prim 'numbero (list t) #'#,stx))))
-
-(define-syntax (not-symbolo stx)
-  (syntax-case stx ()
-    ((_ t)
-     #`(prim 'not-symbolo (list t) #'#,stx))))
-
-(define-syntax (not-stringo stx)
-  (syntax-case stx ()
-    ((_ t)
-     #`(prim 'not-stringo (list t) #'#,stx))))
-
-(define-syntax (not-numbero stx)
-  (syntax-case stx ()
-    ((_ t)
-     #`(prim 'not-numbero (list t) #'#,stx))))
+(define-syntax define-relation
+  (syntax-rules ()
+    ((_ (name param ...) g ...)
+     (begin
+       (define (relation param ... stx)
+         (relate (lambda () (fresh () g ...)) stx))
+       (... (define-syntax (name stx)
+              (syntax-case stx ()
+                ((_ args ...)
+                 #`(relation args ... #'#,stx)))))))))
 
 ;; High level goals
+
 (define-syntax fresh
   (syntax-rules ()
     ((_ (x ...) g0 gs ...)
@@ -77,6 +59,7 @@
      (disj* (conj* g gs ...) (conj* h hs ...) ...))))
 
 ;; Queries
+
 (define-syntax query
   (syntax-rules ()
     ((_ (x ...) g0 gs ...)
