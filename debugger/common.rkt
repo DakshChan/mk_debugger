@@ -166,7 +166,7 @@
   (if state (cons state #f) #f))
 
 ;; Unification
-(define (assign-var u v st)
+(define (assign-var st u v)
   (let* ((types (state-types st))
          (u-type (var-type-ref u types))
          (types (if u-type (var-type-remove u types) types))
@@ -174,23 +174,23 @@
     (and new-sub (let* ((st (set-state-sub   st new-sub))
                         (st (set-state-types st types)))
                    (if u-type
-                       (typify u u-type st)
+                       (typify st u u-type)
                        (state-simplify st))))))
 
-(define (unify u v st)
+(define (unify st u v)
   (let* ((sub (state-sub st))
          (u (walk u sub))
          (v (walk v sub)))
     (cond
       ((and (var? u) (var? v) (var=? u v)) st)
-      ((var? u)                            (assign-var u v st))
-      ((var? v)                            (assign-var v u st))
-      ((and (pair? u) (pair? v))           (let ((st (unify (car u) (car v) st)))
-                                             (and st (unify (cdr u) (cdr v) st))))
+      ((var? u)                            (assign-var st u v))
+      ((var? v)                            (assign-var st v u))
+      ((and (pair? u) (pair? v))           (let ((st (unify st (car u) (car v))))
+                                             (and st (unify st (cdr u) (cdr v)))))
       (else                                (and (eqv? u v) st)))))
 
 ;; Type constraints
-(define (typify u type? st)
+(define (typify st u type?)
   (let ((u (walk u (state-sub st))))
     (if (var? u)
         (let ((u-type (var-type-ref u (state-types st))))
@@ -226,12 +226,12 @@
 (define (diseq-simplify st)
   (let ((diseq (state-diseq st))
         (st    (empty-state-diseq st)))
-    (foldl/and (lambda (=/=s st) (disunify (map car =/=s) (map cdr =/=s) st)) st diseq)))
+    (foldl/and (lambda (=/=s st) (disunify st (map car =/=s) (map cdr =/=s))) st diseq)))
 
 (define (distype-simplify st)
   (let* ((distypes (state-distypes st))
          (st       (empty-state-distypes st)))
-    (foldl/and (lambda (not-type st) (distypify (car not-type) (cdr not-type) st)) st distypes)))
+    (foldl/and (lambda (not-type st) (distypify st (car not-type) (cdr not-type))) st distypes)))
 
 (define (foldl/and proc acc lst)
   (if (null? lst)
@@ -240,12 +240,12 @@
         (and new-acc (foldl/and proc new-acc (cdr lst))))))
 
 ;; Disunification
-(define (disunify u v st)
-  (extend-state/negated-diff (unify u v st) st 'sub))
+(define (disunify st u v)
+  (extend-state/negated-diff (unify st u v) st 'sub))
 
 ;; Distypification
-(define (distypify u type? st)
-  (extend-state/negated-diff (typify u type? st) st 'types))
+(define (distypify st u type?)
+  (extend-state/negated-diff (typify st u type?) st 'types))
 
 ;; Reification
 (struct Ans (term constraint) #:prefab)
