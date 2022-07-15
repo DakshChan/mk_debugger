@@ -213,7 +213,7 @@
     (cond
       ((not newsub) st)
       ((and (eq? mode 'sub) (not (eq? newsub sub)))
-       (extend-state-diseq st (diff-prefix sub newsub '()))) 
+       (extend-state-diseq st (diff-prefix sub newsub '())))
       ((and (eq? mode 'types) (not (eq? newtypes types)))
        (extend-state-distypes st (car (diff-prefix types newtypes '()))))
       (else #f))))
@@ -261,7 +261,7 @@
    (string-append "_." (number->string index))))
 
 ;; stylizes output state
-;; 1. substitutes variables with stylized index 
+;; 1. substitutes variables with stylized index
 ;; 2. simplifies state
 ;; 3. removes unused fresh variables
 ;; 4. stylizes rest of state
@@ -314,7 +314,7 @@
     ((number? v) 1)
     ((string? u) (if (string? v) (if (string<? u v) -1 (if (string=? u v) 0 1)) -1))
     ((string? v) 1)
-    ((pair? u) (if (pair? v) 
+    ((pair? u) (if (pair? v)
                    (let ((compared-cars (term-compare (car u) (car v))))
                      (if (eqv? compared-cars 0)
                          (term-compare (cdr u) (cdr v))
@@ -328,7 +328,7 @@
       (or (contains-fresh? (car x)) (contains-fresh? (cdr x)))
       (var? x)))
 
-(define (pretty-diseq =/=s) 
+(define (pretty-diseq =/=s)
   (map (lambda (=/=) (let ((x (car =/=)) (y (cdr =/=)))
                        (if (term<? x y) (list x y) (list y x))))
        =/=s))
@@ -418,7 +418,8 @@
          (source   (cond
                      ((symbol? source) (symbol->string source))
                      ((path?   source) (path->string   source))
-                     ((string? source) source)))
+                     ((string? source) source)
+                     (else source)))
          (line     (syntax-line syntax))
          (column   (syntax-column syntax))
          (position (syntax-position syntax))
