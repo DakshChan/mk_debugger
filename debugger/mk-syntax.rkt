@@ -39,12 +39,12 @@
   (syntax-rules ()
     ((_ (name param ...) g ...)
      (begin
-       (define (relation param ... stx)
+       (define (make-relation param ... stx)
          (relate (lambda () (fresh () g ...)) stx))
        (... (define-syntax (name stx)
               (syntax-case stx ()
                 ((_ args ...)
-                 #`(relation args ... #'#,stx)))))))))
+                 #`(make-relation args ... #'#,stx)))))))))
 
 ;; High level goals
 
