@@ -18,20 +18,20 @@
 
 (define-syntax define-prim
   (syntax-rules ()
-    ((_ name param ...)
+    ((_ (name param ...) (cx const ...))
      (define-syntax (name stx)
        (syntax-case stx ()
          ((_ param ...)
-          #`(prim 'name (list param ...) #'#,stx)))))))
+          #`(prim 'name cx (list param ... const ...) #'#,stx)))))))
 
-(define-prim ==          t1 t2)
-(define-prim =/=         t1 t2)
-(define-prim symbolo     t)
-(define-prim stringo     t)
-(define-prim numbero     t)
-(define-prim not-symbolo t)
-(define-prim not-stringo t)
-(define-prim not-numebro t)
+(define-prim (== t1 t2)      (unify))
+(define-prim (=/= t1 t2)     (disunify))
+(define-prim (symbolo t)     (typify symbol?))
+(define-prim (stringo t)     (typify string?))
+(define-prim (numbero t)     (typify number?))
+(define-prim (not-symbolo t) (distypify symbol?))
+(define-prim (not-stringo t) (distypify string?))
+(define-prim (not-numbero t) (distypify number?))
 
 ;; User-defined relations
 

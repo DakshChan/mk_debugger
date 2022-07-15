@@ -91,14 +91,14 @@
 
 ;; First Order microKanren
 
-(struct disj     (g1 g2)       #:prefab)
-(struct conj     (g1 g2)       #:prefab)
-(struct relate   (thunk stx)   #:prefab)
-(struct prim     (name ts stx) #:prefab)
-(struct bind     (s g)         #:prefab)
-(struct mplus    (s1 s2)       #:prefab)
-(struct pause    (st g)        #:prefab)
-(struct pop      ()            #:prefab)
+(struct disj     (g1 g2)                  #:prefab)
+(struct conj     (g1 g2)                  #:prefab)
+(struct relate   (thunk stx)              #:prefab)
+(struct prim     (name constraint ts stx) #:prefab)
+(struct bind     (s g)                    #:prefab)
+(struct mplus    (s1 s2)                  #:prefab)
+(struct pause    (st g)                   #:prefab)
+(struct pop      ()                       #:prefab)
 
 (define (mature? s) (or (not s) (pair? s)))
 (define (mature s)
@@ -118,19 +118,9 @@
     ((pop)
      (pp-map-add-successes! (car (state-stack st)))
      (state->stream (pop-state-stack st)))
-    ((prim type ts stx)
+    ((prim name cx ts stx)
      (let ((st (extend-state-path st stx)))
-       (state->stream/log
-        (match* (type ts)
-          (('==          (list t1 t2)) (unify t1 t2 st))
-          (('=/=         (list t1 t2)) (disunify t1 t2 st))
-          (('symbolo     (list t))     (typify t symbol? st))
-          (('stringo     (list t))     (typify t string? st))
-          (('numbero     (list t))     (typify t number? st))
-          (('not-symbolo (list t))     (distypify t symbol? st))
-          (('not-stringo (list t))     (distypify t string? st))
-          (('not-numbero (list t))     (distypify t number? st)))
-        st (append (list type) ts))))))
+       (state->stream/log (apply cx st ts) st (append (list name) ts))))))
 
 (define (step s)
   (match s
@@ -149,5 +139,5 @@
                            (bind (cdr s) g))))
              (else (bind s g)))))
     ((pause st g) (start st g))
-    (_            s)))
+    (_ s)))
 
