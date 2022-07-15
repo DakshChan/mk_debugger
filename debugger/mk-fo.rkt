@@ -1,15 +1,8 @@
 #lang racket
 (provide
- ==
- =/=
- symbolo
- stringo
- numbero
- not-symbolo
- not-stringo
- not-numbero
-
+ define-prim
  define-relation
+ 
  fresh
  conde
  query
