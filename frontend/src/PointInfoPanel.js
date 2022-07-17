@@ -1,7 +1,6 @@
-import {useEffect} from "react";
 import "./InfoPanel.css"
 
-export default function PointInfoPanel({pointDebug}) {
+export default function PointInfoPanel({pointDebug, code}) {
 
   if (pointDebug !== undefined) {
     return (
@@ -17,7 +16,7 @@ export default function PointInfoPanel({pointDebug}) {
           <p>Column: {pointDebug.syntax.column}</p>
         </div>
         <div>
-            <p>Syntax: {pointDebug.syntax.content}</p>
+            <p>Syntax: {code.substring(pointDebug.syntax.position - 1, pointDebug.syntax.position + pointDebug.syntax.span - 1)}</p>
         </div>
       </div>
     );

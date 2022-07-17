@@ -1,4 +1,4 @@
-import {useEffect, useState, memo} from "react";
+import {useEffect, useState} from "react";
 
 export default function ProgramPoint({children, data, range, codeHighlight, setPointDebug}) {
 
@@ -37,6 +37,12 @@ export default function ProgramPoint({children, data, range, codeHighlight, setP
         c2 = 0;
       }
       setColor(`rgba(255, 0, 0, ${c2}%)`);
+    } else if (codeHighlight.info === "successRatio") {
+      let c = 255 - rangeMap((data.successes / (data.fails + data.successes)), 0, 1, 0, 255);
+      setColor(`rgba(${c}, 255, ${c}, 100%)`);
+    } else if (codeHighlight.info === "failRatio") {
+      let c = 255 - rangeMap((data.fails / (data.fails + data.successes)), 0, 1, 0, 255);
+      setColor(`rgba(${c}, 255, ${c}, 100%)`);
     } else {
       setColor(`rgba(0, 0, 0, 0%)`);
     }

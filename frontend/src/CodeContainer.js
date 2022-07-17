@@ -4,7 +4,6 @@ import "./prism.css"
 import ProgramPoint from "./ProgramPoint";
 import md5 from "md5";
 import "./CodeContainer.css";
-import Temp from "./Temp";
 
 export default function CodeContainer ({code, debug, codeHighlight, setPointDebug}) {
   const [parsedLines, setParsedLines] = useState([]);
@@ -16,14 +15,11 @@ export default function CodeContainer ({code, debug, codeHighlight, setPointDebu
   }
 
   useLayoutEffect(() => {
-    console.log("scroll");
     let a = document.getElementById("code-container-main");
-    console.log(a);
       if (a !== null) {
         a.scroll({top: scroll});
-        console.log(scroll);
       }
-  }, [code, codeHighlight]);
+  }, [code, codeHighlight, scroll]);
 
   useEffect(() => {
     if (debug !== undefined) {
@@ -95,9 +91,9 @@ export default function CodeContainer ({code, debug, codeHighlight, setPointDebu
           {
             parsedLines.map((line, index) => {
               if (line.data !== undefined) {
-                return <ProgramPoint key={md5(line.text + index.toString())} data={line.data} range={range} codeHighlight={codeHighlight} setPointDebug={setPointDebug}>{line.text}</ProgramPoint>
+                return <ProgramPoint key={md5(line.text) + index} data={line.data} range={range} codeHighlight={codeHighlight} setPointDebug={setPointDebug}>{line.text}</ProgramPoint>
               } else {
-                return <span key={md5(line.text + index.toString())}>{line.text}</span>
+                return <span key={md5(line.text) + index}>{line.text}</span>
               }
             })
           }
@@ -109,7 +105,7 @@ export default function CodeContainer ({code, debug, codeHighlight, setPointDebu
       <div className="code-container" key={md5(code)}>
         <pre className="line-numbers"><code id="code-container-main" className="language-racket match-braces" onScroll={handleScroll}>
           {code.split("\n").map((line, index) => {
-            return <span key={index}>{line + "\n"}</span>
+            return <span key={md5(line) + index}>{line + "\n"}</span>
           })
           }
         </code></pre>

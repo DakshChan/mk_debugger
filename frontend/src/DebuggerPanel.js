@@ -1,4 +1,3 @@
-import {useEffect, useState} from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import "./DebuggerPanel.css";
@@ -27,11 +26,22 @@ export default function DebuggerPanel({setDebug}) {
     });
   }
 
+  const killProcess = (e) => {
+    e.preventDefault();
+    const url = 'http://localhost:3000/kill';
+    axios.post(url).then((response) => {
+      console.log(response.status);
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
   return (
     <>
       <form className={"panelForm"}>
         <button onClick={handleSubmit((d) => executeQuery({...d, "command": "run"}))}>Run</button>
         <button onClick={handleSubmit((d) => executeQuery({...d, "command": "resume"}))}>Resume</button>
+        <button onClick={killProcess}>Kill</button>
         <label>Solutions</label>
         <input type={"number"} {...register("solutions")} defaultValue={-1}/>
         <label>Samples</label>

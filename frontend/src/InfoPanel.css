@@ -20,6 +20,10 @@
     width: stretch;
 }
 
+.state-info-panel h4 {
+    margin: 0;
+}
+
 .point-info-panel h3, .point-info-panel p {
     margin-top: 0.7em;
     margin-bottom: 0.7em;

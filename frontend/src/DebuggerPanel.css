@@ -5,8 +5,8 @@
     margin-left: 0.5em;
 }
 .panelForm input[type="number"] {
-    width: 2em;
+    width: 8em;
 }
 .panelForm input[type="text"] {
-    width: 20em;
+    width: 40em;
 }

@@ -1,9 +1,9 @@
 const express = require('express');
 const path = require('path');
+const {resolve} = require('path');
 const cors = require('cors');
 const tmp = require('tmp');
 const formData = require('express-form-data');
-
 const { spawn } = require('child_process');
 const fs = require('fs');
 
@@ -20,34 +20,32 @@ app.use(cors({
   origin: '*'
 }));
 
-let userCode = null;
+let userRepl = null;
 let racket = null;
 let racketBuf = null;
 
-const debugger_path = "C:\\Users\\daksh\\WebstormProjects\\mk_debugger\\debugger\\mk-fo.rkt";
-
-app.get('/die', (req, res) => {
-  if (racket !== null) {
-    racket.kill();
-  }
+app.post('/kill', (req, res) => {
+  racket?.kill?.();
   racket = null;
   racketBuf = null;
-  res.send("killed");
+  res.status(200).send('killed');
 });
 
 app.post('/code', (req, res) => {
   //TODO: potentially reformat before sending back to client
-  userCode = req.files.file.path;
-  if (racket !== null) {
-    racket.kill();
-    racketBuf = null;
-  }
+  let userCode = req.files.file.path;
+  console.log(userCode);
+  racket?.kill?.();
+  racketBuf = null;
 
-  // let tmpRepl = tmp.fileSync({postfix: '.rkt'});
-  // console.log(tmpRepl.name);
-  // const header = `#lang racket\n\n(provide (all-defined-out))\n(require (file "${debugger_path}"))\n\n`.replaceAll("\\", "\\\\");
-  // fs.writeFileSync(tmpRepl.name, header);
-  // fs.appendFileSync(tmpRepl.name, fs.readFileSync(userCode).toString());
+  console.log(resolve("../debugger/mk-fo.rkt").replaceAll("\\", "\\\\"));
+  let tmpRepl = tmp.fileSync({postfix: '.rkt'});
+  console.log(tmpRepl.name);
+  let modifiedRepl = fs.readFileSync("repl.rkt").toString()
+    .replace("{{$USER_CODE}}", userCode.replaceAll("\\", "\\\\"))
+    .replace("{{$DEBUGGER_PATH}}", resolve("../debugger/mk-fo.rkt").replaceAll("\\", "\\\\"))
+  fs.writeFileSync(tmpRepl.name, modifiedRepl);
+  userRepl = tmpRepl.name;
 
   res.sendFile(userCode);
 });
@@ -55,22 +53,18 @@ app.post('/code', (req, res) => {
 app.post('/debug', (req, res) => {
   console.log(JSON.stringify(req.body));
 
-  if (userCode === null) {
+  if (userRepl === null) {
     res.status(400).send("No code uploaded");
     return;
   }
 
   racketBuf = "";
-  if (racket !== null) {
-    racket.stdout.removeAllListeners();
-    racket.stderr.removeAllListeners();
-  }
+  racket?.stdout?.removeAllListeners?.();
+  racket?.stderr?.removeAllListeners?.();
 
   if (req.body.command === "run") { // run
-    if (racket !== null) {
-      racket.kill();
-    }
-    racket = spawn("racket.exe", ["repl.rkt"]);
+    racket?.kill?.();
+    racket = spawn("racket.exe", [userRepl]);
 
   } else { // resume
     if (racket === null) {
@@ -102,7 +96,6 @@ app.post('/debug', (req, res) => {
 
   racket.stderr.on('data', (data) => {
     console.error(`stderr: ${data.toString()}`);
-    res.sendStatus(400);
     res.status(400).write(data.toString());
     res.end();
 
@@ -111,6 +104,10 @@ app.post('/debug', (req, res) => {
     racket.kill();
     racket = null;
   });
+
+  racket.on('exit', (code, signal) => {
+    res.status(400).end();
+  })
 });
 
 app.get('(/*)?', (req, res) => {
