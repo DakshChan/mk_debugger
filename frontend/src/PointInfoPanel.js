@@ -16,7 +16,7 @@ export default function PointInfoPanel({pointDebug, code}) {
           <p>Column: {pointDebug.syntax.column}</p>
         </div>
         <div>
-            <p>Syntax: {code.substring(pointDebug.syntax.position - 1, pointDebug.syntax.position + pointDebug.syntax.span - 1)}</p>
+            <p>Syntax: {pointDebug.syntax.content}</p>
         </div>
       </div>
     );

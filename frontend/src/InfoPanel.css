@@ -1,4 +1,4 @@
-.point-info-panel, .solution-info-panel, .rejection-info-panel {
+.point-info-panel, .solution-info-panel, .rejection-info-panel, .time-info-panel {
     background-color: #f5f8fb;
     margin: 1em;
     padding: 1em;
@@ -24,16 +24,16 @@
     margin: 0;
 }
 
-.point-info-panel h3, .point-info-panel p {
+.point-info-panel h3, .point-info-panel p, .time-info-panel h3, .time-info-panel p {
     margin-top: 0.7em;
     margin-bottom: 0.7em;
 }
 
-.point-info-panel p {
+.point-info-panel p, .time-info-panel p {
     padding-right: 3ch;
 }
 
-.point-info-panel p:last-child {
+.point-info-panel p:last-child, .time-info-panel p:last-child {
     padding-right: 0;
 }
 
