@@ -45,7 +45,7 @@ export default function DebuggerPanel({setDebug}) {
         <label>Solutions</label>
         <input type={"number"} {...register("solutions")} defaultValue={-1}/>
         <label>Samples</label>
-        <input type={"number"} {...register("samples")} defaultValue={-1}/>
+        <input type={"number"} {...register("samples")} defaultValue={0}/>
         <label>Steps</label>
         <input type={"number"} {...register("steps")} defaultValue={-1}/>
         <label>Query</label>
