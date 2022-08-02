@@ -1,12 +1,16 @@
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { useLocalStorage } from '@rehooks/local-storage';
 import "./DebuggerPanel.css";
 
-export default function DebuggerPanel({setDebug}) {
+export default function DebuggerPanel({setDebug, fileName}) {
   const {register, handleSubmit} = useForm();
+  const [queryCache, setQueryCache] = useLocalStorage('queryCache', {});
 
   const executeQuery = (query) => {
     console.log(query);
+    if (fileName !== "") setQueryCache({...queryCache, [fileName]:query});
     let solutions = parseInt(query.solutions);
     solutions = solutions > -1 ? solutions : "#f";
     let samples = parseInt(query.samples);
@@ -38,18 +42,18 @@ export default function DebuggerPanel({setDebug}) {
 
   return (
     <>
-      <form className={"panelForm"}>
+      <form className={"panelForm"} key={fileName}>
         <button onClick={handleSubmit((d) => executeQuery({...d, "command": "run"}))}>Run</button>
         <button onClick={handleSubmit((d) => executeQuery({...d, "command": "resume"}))}>Resume</button>
         <button onClick={killProcess}>Kill</button>
         <label>Solutions</label>
-        <input type={"number"} {...register("solutions")} defaultValue={-1}/>
+        <input key={"solutions"+fileName} type={"number"} {...register("solutions")} defaultValue={queryCache[fileName]?.solutions ?? -1}/>
         <label>Samples</label>
-        <input type={"number"} {...register("samples")} defaultValue={0}/>
+        <input key={"samples"+fileName} type={"number"} {...register("samples")} defaultValue={queryCache[fileName]?.samples ?? 0}/>
         <label>Steps</label>
-        <input type={"number"} {...register("steps")} defaultValue={-1}/>
+        <input key={"steps"+fileName} type={"number"} {...register("steps")} defaultValue={queryCache[fileName]?.steps ?? -1}/>
         <label>Query</label>
-        <input type={"text"} {...register("query")} defaultValue={''}/>
+        <input key={"query"+fileName} type={"text"} {...register("query")} defaultValue={queryCache[fileName]?.query ?? ""}/>
       </form>
     </>
   );

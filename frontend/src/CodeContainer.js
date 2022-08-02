@@ -23,17 +23,16 @@ export default function CodeContainer ({code, debug, codeHighlight, setPointDebu
 
   useEffect(() => {
     if (debug !== undefined) {
-      setParsedLines(programPointParser());
+      let programPointList = debug["program-points"];
+      setParsedLines(programPointParser(code, programPointList));
+    } else {
+      setParsedLines([]);
     }
-  }, [debug]);
+  }, [code, debug]);
 
   useEffect(() => {
     Prism.highlightAll();
   }, [code, parsedLines, codeHighlight, range]);
-
-  useEffect(() => {
-    console.log(code);
-  }, [code]);
 
   useEffect(() => {
     if (codeHighlight.info === "encounters") {
@@ -61,28 +60,6 @@ export default function CodeContainer ({code, debug, codeHighlight, setPointDebu
       //tbd when failure data is available
     }
   }, [debug, codeHighlight]);
-
-  const programPointParser = () => {
-    let resList = [];
-    if (debug !== undefined) {
-      let programPointList = debug["program-points"];
-      programPointList.sort((a, b) =>  a.syntax.position - b.syntax.position);
-      let end = 1, start = 1;
-      for (const programPoint of programPointList) {
-        start = programPoint.syntax.position;
-        if (start - end > 0) {
-          resList.push({"key": end, "text": code.substring(start-1, end-1), "data": undefined});
-        }
-        end = start + programPoint.syntax.span;
-        resList.push({"key": start, "text": code.substring(start-1, end-1), "data": programPoint});
-      }
-      if (end !== code.length) {
-        resList.push({"key": end, "text": code.substring(end, code.length), "data": undefined});
-      }
-
-    }
-    return resList
-  }
 
   if (debug !== undefined) {
     return (
@@ -112,4 +89,22 @@ export default function CodeContainer ({code, debug, codeHighlight, setPointDebu
       </div>
     )
   }
+}
+
+function programPointParser(code, programPointList) {
+  let resList = [];
+  programPointList.sort((a, b) =>  a.syntax.position - b.syntax.position);
+  let end = 1, start = 1;
+  for (const programPoint of programPointList) {
+    start = programPoint.syntax.position;
+    if (start - end > 0) {
+      resList.push({"key": end, "text": code.substring(start-1, end-1), "data": undefined});
+    }
+    end = start + programPoint.syntax.span;
+    resList.push({"key": start, "text": code.substring(start-1, end-1), "data": programPoint});
+  }
+  if (end !== code.length) {
+    resList.push({"key": end, "text": code.substring(end, code.length), "data": undefined});
+  }
+  return resList
 }

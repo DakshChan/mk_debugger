@@ -1,9 +1,7 @@
 import axios from "axios";
 import {useState} from "react";
 
-export default function UploadCode({setCode, setDebug}) {
-  const [fileName, setFileName] = useState("No file chosen");
-
+export default function UploadCode({setCode, setDebug, fileName, setFileName}) {
   function handleChange(event) {
 
     const file = event.target.files[0];
@@ -33,7 +31,9 @@ export default function UploadCode({setCode, setDebug}) {
     <>
       <label htmlFor="file_upload">
         <button style={{pointerEvents: "none"}}>Choose file</button>
-        <span style={{fontSize:"small", marginInline:"1ch"}}>{fileName}</span>
+        <span style={{fontSize:"small", marginInline:"1ch"}}>
+          {fileName !== "" ? fileName : "No file chosen"}
+        </span>
       </label>
       <input
         style={{opacity: 0, width:0, height:0}}

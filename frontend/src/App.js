@@ -13,12 +13,13 @@ function App() {
   const [debug, setDebug] = useState(undefined);
   const [codeHighlight, setCodeHighlight] = useState({"info": "encounters", "style": "color"});
   const [pointDebug, setPointDebug] = useState(undefined);
+  const [fileName, setFileName] = useState("");
 
   return (
     <div>
       <div>
-        <UploadCode setCode={setCode} setDebug={setDebug}/>
-        <DebuggerPanel setDebug={setDebug}/>
+        <UploadCode setCode={setCode} setDebug={setDebug} fileName={fileName} setFileName={setFileName}/>
+        <DebuggerPanel setDebug={setDebug} fileName={fileName}/>
       </div>
       <div>
         <div onChange={(event) => setCodeHighlight({...codeHighlight, "info": event.target.value})}>
