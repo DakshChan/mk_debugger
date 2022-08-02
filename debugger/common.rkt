@@ -205,7 +205,7 @@
       (reverse acc)
       (diff-prefix x (cdr newx) (cons (car newx) acc))))
 
-(define (extend-state/negated-diff newst st mode)
+(define (extend-state/negated-diff st newst mode)
   (let* ((sub      (state-sub st))
          (types    (state-types st))
          (newsub   (and newst (state-sub newst)))
@@ -241,11 +241,11 @@
 
 ;; Disunification
 (define (disunify st u v)
-  (extend-state/negated-diff (unify st u v) st 'sub))
+  (extend-state/negated-diff st (unify st u v) 'sub))
 
 ;; Distypification
 (define (distypify st u type?)
-  (extend-state/negated-diff (typify st u type?) st 'types))
+  (extend-state/negated-diff st (typify st u type?) 'types))
 
 ;; Reification
 (struct Ans (term constraint) #:prefab)
