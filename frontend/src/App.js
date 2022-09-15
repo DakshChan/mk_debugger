@@ -6,18 +6,20 @@ import { useState } from "react";
 import './App.css';
 import SolutionInfoPanel from "./SolutionInfoPanel";
 import RejectionInfoPanel from "./RejectionInfoPanel";
+import TimeInfoPanel from "./TimeInfoPanel";
 
 function App() {
   const [code, setCode] = useState("");
   const [debug, setDebug] = useState(undefined);
   const [codeHighlight, setCodeHighlight] = useState({"info": "encounters", "style": "color"});
   const [pointDebug, setPointDebug] = useState(undefined);
+  const [fileName, setFileName] = useState("");
 
   return (
     <div>
       <div>
-        <UploadCode setCode={setCode} setDebug={setDebug}/>
-        <DebuggerPanel setDebug={setDebug}/>
+        <UploadCode setCode={setCode} setDebug={setDebug} fileName={fileName} setFileName={setFileName}/>
+        <DebuggerPanel setDebug={setDebug} fileName={fileName}/>
       </div>
       <div>
         <div onChange={(event) => setCodeHighlight({...codeHighlight, "info": event.target.value})}>
@@ -25,12 +27,12 @@ function App() {
           <input type={"radio"} name={"PP-Select"} defaultChecked={true} value={"encounters"}/>
           <label>Failures</label>
           <input type={"radio"} name={"PP-Select"} value={"failures"}/>
+          <label>Failure Ratio</label>
+          <input type={"radio"} name={"PP-Select"} value={"failRatio"}/>
           <label>Successes</label>
           <input type={"radio"} name={"PP-Select"} value={"successes"}/>
           <label>Success Ratio</label>
           <input type={"radio"} name={"PP-Select"} value={"successRatio"}/>
-          <label>Fail Ratio</label>
-          <input type={"radio"} name={"PP-Select"} value={"failRatio"}/>
         </div>
         {/*<select defaultValue={"color"} onChange={(event) => setCodeHighlight({...codeHighlight, "style": event.target.value})}>*/}
         {/*  <option value={"none"}>None</option>*/}
@@ -40,6 +42,7 @@ function App() {
         <div style={{display: "flex", flexDirection:"row", height: "calc(100vh - 6em)", width: "100vw"}}>
           <CodeContainer code={code} debug={debug} codeHighlight={codeHighlight} setPointDebug={setPointDebug}/>
           <div style={{width: "-webkit-fill-available"}}>
+            <TimeInfoPanel debug={debug}/>
             <PointInfoPanel pointDebug={pointDebug} code={code}/>
             <SolutionInfoPanel debug={debug} code={code}/>
             <RejectionInfoPanel debug={debug} code={code}/>

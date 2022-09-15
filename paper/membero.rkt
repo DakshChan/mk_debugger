@@ -1,0 +1,5 @@
+(define-relation (membero x lst)
+  (fresh (first rest)
+         (== lst (cons first rest))
+         (conde ((== first x))
+                (#|(=/= first x)|# (membero x rest)))))

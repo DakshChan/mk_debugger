@@ -29,6 +29,7 @@
 (define (reset-globals!)
   (pp-map-reset!)
   (failed-lst-reset!)
+  (failed-count-reset!)
   (set! paused-stream #f)
   (set! paused-solns '()))
 
@@ -65,6 +66,9 @@
 
 (define failed-count 0)
 
+(define (failed-count-reset!)
+  (set! failed-count 0))
+
 (define (state->stream/log st oldst cx)
   (pp-map-add-count! (last-from-state-path oldst))
   (let ((s (state->stream st))
@@ -77,17 +81,18 @@
            (if failed-lst-size
                (if (< len failed-lst-size)
                    (add-failed! (cons oldst cx))
-                   (cond ((> failed-lst-size (* (random) failed-count))) ; eqv to (n/failed-count) chance of success
-                         (replace-random-failed! (cons oldst cx))))
+                   (let ((r (random)))
+                     (cond ((> failed-lst-size (* r failed-count)) ; eqv to (n/failed-count) chance of success
+                            (replace-random-failed! (cons oldst cx))))))
                (add-failed! (cons oldst cx))))
           (else (pp-map-add-successes! (car (state-path oldst)))))
     s))
 
 (define (replace-random-failed! x)
-  (set! failed-lst (cons x (car (shuffle failed-lst)))))
+  (set! failed-lst (append (list x) (cdr (shuffle failed-lst)))))
 
 (define (add-failed! x)
-  (set! failed-lst (cons x failed-lst)))
+  (set! failed-lst (append (list x) failed-lst)))
 
 ;; First Order microKanren
 

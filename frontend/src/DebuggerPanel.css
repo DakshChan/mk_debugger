@@ -1,7 +1,7 @@
 .panelForm {
     flex: 1;
 }
-.panelForm input, label {
+.panelForm input, .panelForm label {
     margin-left: 0.5em;
 }
 .panelForm input[type="number"] {
