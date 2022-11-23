@@ -22,6 +22,7 @@ export default function DebuggerPanel({setDebug, fileName}) {
     query.steps = steps.toString();
     console.log(query);
     const url = 'http://localhost:3000/debug';
+    setDebug(undefined);
     axios.postForm(url, query).then((response) => {
       console.log(response.data);
       setDebug(response.data);
@@ -33,6 +34,7 @@ export default function DebuggerPanel({setDebug, fileName}) {
   const killProcess = (e) => {
     e.preventDefault();
     const url = 'http://localhost:3000/kill';
+    setDebug(undefined);
     axios.post(url).then((response) => {
       console.log(response.status);
     }).catch((error) => {
