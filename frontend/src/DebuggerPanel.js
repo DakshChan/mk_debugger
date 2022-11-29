@@ -21,7 +21,7 @@ export default function DebuggerPanel({setDebug, fileName}) {
     query.samples = samples.toString();
     query.steps = steps.toString();
     console.log(query);
-    const url = 'http://localhost:3000/debug';
+    const url = `http://localhost:${process.env.PORT || 3000}/debug`;
     axios.postForm(url, query).then((response) => {
       console.log(response.data);
       setDebug(response.data);

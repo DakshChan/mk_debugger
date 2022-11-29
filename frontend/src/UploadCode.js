@@ -1,12 +1,13 @@
 import axios from "axios";
 import {useState} from "react";
 
+
 export default function UploadCode({setCode, setDebug, fileName, setFileName}) {
   function handleChange(event) {
 
     const file = event.target.files[0];
     console.log(file);
-    const url = 'http://localhost:3000/code';
+    const url = `http://localhost:${process.env.PORT || 3000}/code`;
     const formData = new FormData();
     formData.append('file', file);
     formData.append('fileName', file.name);

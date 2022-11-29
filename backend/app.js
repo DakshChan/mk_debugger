@@ -4,7 +4,7 @@ const {resolve} = require('path');
 const cors = require('cors');
 const tmp = require('tmp');
 const formData = require('express-form-data');
-const { spawn } = require('child_process');
+const { spawn, spawnSync} = require('child_process');
 const fs = require('fs');
 
 const app = express();
@@ -64,7 +64,10 @@ app.post('/debug', (req, res) => {
 
   if (req.body.command === "run") { // run
     racket?.kill?.();
-    racket = spawn("racket.exe", [userRepl]);
+    racket = spawn("racket", [userRepl]);
+    // let d = spawnSync("bash", ["-c", "docker run -rm -it racket:8.7-full"]);
+    // console.log(d?.stdout?.toString());
+    // console.log(d?.stderr?.toString());
 
   } else { // resume
     if (racket === null) {
