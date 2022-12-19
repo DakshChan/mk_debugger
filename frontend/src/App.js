@@ -2,11 +2,14 @@ import CodeContainer from "./CodeContainer";
 import UploadCode from "./UploadCode";
 import DebuggerPanel from "./DebuggerPanel";
 import PointInfoPanel from "./PointInfoPanel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import './App.css';
 import SolutionInfoPanel from "./SolutionInfoPanel";
 import RejectionInfoPanel from "./RejectionInfoPanel";
 import TimeInfoPanel from "./TimeInfoPanel";
+
+import io from 'socket.io-client';
+const socket = io();
 
 function App() {
   const [code, setCode] = useState("");
@@ -15,11 +18,53 @@ function App() {
   const [pointDebug, setPointDebug] = useState(undefined);
   const [fileName, setFileName] = useState("");
 
+  useEffect(() => {
+    socket.on('connect', () => {
+      console.log("Connected to server");
+    });
+
+    socket.on('disconnect', () => {
+      console.log("Disconnected from server");
+    });
+
+    socket.on('exit', (code, signal) => {
+      console.log("Racket process exited with code", code, "and signal", signal);
+    });
+
+    return () => {
+      socket.off('connect');
+      socket.off('disconnect');
+      socket.off('exit');
+    };
+  }, []);
+
+  const sendKill = () => {
+    socket.emit('kill', (data) => {
+      console.log(data);
+    });
+  };
+
+  const sendCode = (file, fileName) => {
+    socket.emit('code', file, fileName, (data) => {
+      console.log(data);
+      setCode((new TextDecoder("utf-8")).decode(data.file));
+      setDebug(undefined);
+      setFileName(data.fileName);
+    });
+  };
+
+  const sendQuery = (query) => {
+    socket.emit('query', query, (data) => {
+      console.log(data);
+      setDebug(data.data)
+    });
+  }
+
   return (
     <div>
       <div>
-        <UploadCode setCode={setCode} setDebug={setDebug} fileName={fileName} setFileName={setFileName}/>
-        <DebuggerPanel setDebug={setDebug} fileName={fileName}/>
+        <UploadCode sendCode={sendCode} fileName={fileName}/>
+        <DebuggerPanel sendQuery={sendQuery} sendKill={sendKill} fileName={fileName}/>
       </div>
       <div>
         <div onChange={(event) => setCodeHighlight({...codeHighlight, "info": event.target.value})}>

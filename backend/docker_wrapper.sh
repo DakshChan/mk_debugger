@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dockerd &>/dev/null &
+nice -n 19 dockerd &>/dev/null &
 npm start &
 wait -n
 exit $?

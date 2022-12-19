@@ -17,4 +17,4 @@ WORKDIR /profiler/backend
 COPY ./backend .
 RUN cp -r ../frontend/build .
 
-CMD /bin/bash docker_wrapper.sh
+CMD ["/bin/bash", "docker_wrapper.sh"]

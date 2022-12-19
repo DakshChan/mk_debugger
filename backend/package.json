@@ -7,13 +7,8 @@
   },
   "dependencies": {
     "child_process": "^1.0.2",
-    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "~4.16.1",
-    "express-form-data": "^2.0.18",
-    "express-session": "^1.17.3",
-    "socket.io": "^4.5.4",
-    "tmp": "^0.2.1",
-    "uuid": "^9.0.0"
+    "socket.io": "^4.5.4"
   }
 }

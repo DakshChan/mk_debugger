@@ -6,4 +6,4 @@ WORKDIR /profiler
 COPY ./debugger ./
 COPY ./tmp/${userRepl}/user-code.rkt ./
 
-CMD racket /profiler/repl.rkt
+CMD ["racket", "/profiler/repl.rkt"]
