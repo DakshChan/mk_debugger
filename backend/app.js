@@ -1,31 +1,35 @@
 const express = require('express');
 const path = require('path');
-const {resolve} = require('path');
+const { resolve } = require('path');
 const cors = require('cors');
-const tmp = require('tmp');
 const formData = require('express-form-data');
-const { spawn, spawnSync} = require('child_process');
+const { spawn, spawnSync, exec } = require('child_process');
 const fs = require('fs');
+const uuid = require('uuid');
+const cookieParser = require("cookie-parser");
+const sessions = require('express-session');
+const socket = require("socket.io");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 
 app.use(formData.parse());
-
 app.use(express.static(path.join(__dirname, 'build')))
+app.use(sessions({secret: "gamer"}))
 
 // cors only being used when running react server, remove after react build
 app.use(cors({
   origin: '*'
 }));
 
-let userRepl = null;
 let racket = null;
 let racketBuf = null;
+let codeContent = null;
+let userUUID = null;
 
 app.post('/kill', (req, res) => {
-  racket?.kill?.();
+  racket?.kill();
   racket = null;
   racketBuf = null;
   res.status(200).send('killed');
@@ -35,17 +39,20 @@ app.post('/code', (req, res) => {
   //TODO: potentially reformat before sending back to client
   let userCode = req.files.file.path;
   console.log(userCode);
-  racket?.kill?.();
+  racket?.kill();
   racketBuf = null;
 
-  console.log(resolve("../debugger/mk-fo.rkt").replaceAll("\\", "\\\\"));
-  let tmpRepl = tmp.fileSync({postfix: '.rkt'});
-  console.log(tmpRepl.name);
-  let modifiedRepl = fs.readFileSync("repl.rkt").toString()
-    .replace("{{$USER_CODE}}", userCode.replaceAll("\\", "\\\\"))
-    .replace("{{$DEBUGGER_PATH}}", resolve("../debugger/mk-fo.rkt").replaceAll("\\", "\\\\"))
-  fs.writeFileSync(tmpRepl.name, modifiedRepl);
-  userRepl = tmpRepl.name;
+  codeContent = fs.readFileSync(userCode, 'utf8').toString();
+
+  console.log(resolve("./debugger/mk-fo.rkt").replaceAll("\\", "\\\\"));
+  userUUID = uuid.v4();
+  if (!fs.existsSync(`./tmp/${userUUID}`)) {
+    fs.mkdirSync(`./tmp/${userUUID}`);
+  }
+
+  console.log(userUUID);
+  fs.writeFileSync(`./tmp/${userUUID}/user-code.rkt`, codeContent);
+  userUploadedCode = `./tmp/${userUUID}/user-code.rkt`;
 
   res.sendFile(userCode);
 });
@@ -53,19 +60,21 @@ app.post('/code', (req, res) => {
 app.post('/debug', (req, res) => {
   console.log(JSON.stringify(req.body));
 
-  if (userRepl === null) {
+  if (userUUID === null) {
     res.status(400).send("No code uploaded");
     return;
   }
 
   racketBuf = "";
-  racket?.stdout?.removeAllListeners?.();
-  racket?.stderr?.removeAllListeners?.();
+  racket?.stdout?.removeAllListeners();
+  racket?.stderr?.removeAllListeners();
 
   if (req.body.command === "run") { // run
-    racket?.kill?.();
-    racket = spawn("racket", [userRepl]);
-    // let d = spawnSync("bash", ["-c", "docker run -rm -it racket:8.7-full"]);
+    racket?.kill();
+    // racket = spawn("racket", [userRepl]);
+    // racket = spawn("bash", ["-c", `docker run --rm -it $(docker build -q --build-arg userRepl=${userUUID} -f racketDockerfile .)`], {detached: true});
+    racket = spawn("bash", ["-c", `docker run --rm -i $(docker build --rm -q --build-arg userRepl=${userUUID} -f racketDockerfile .); wait -n`]);
+    //let d = spawnSync(`docker build --build-arg userRepl=${userUUID} -f racketDockerfile .`);
     // console.log(d?.stdout?.toString());
     // console.log(d?.stderr?.toString());
 
@@ -83,12 +92,8 @@ app.post('/debug', (req, res) => {
     racketBuf += data;
     try {
       const resultJSON = JSON.parse(racketBuf);
-      // console.log(JSON.stringify(resultJSON));
+      console.log(JSON.stringify(resultJSON));
       resultJSON["program-points"] = resultJSON["program-points"].filter(x => x.syntax.source !== false)
-      // resultJSON["rejected-states"] = resultJSON["rejected-states"].map(x => {x.path = x.path.filter(y => y.source !== false); return x;});
-      // resultJSON["rejected-states"] = resultJSON["rejected-states"].map(x => {x.stack = x.stack.filter(y => y.source !== false); return x;});
-      // resultJSON["solutions"] = resultJSON["solutions"].map(x => {x.path = x.path.filter(y => y.source !== false); return x;});
-      // resultJSON["solutions"] = resultJSON["solutions"].map(x => {x.stack = x.stack.filter(y => y.source !== false); return x;});
       // console.log(JSON.stringify(resultJSON));
       res.json(resultJSON);
       res.end();
@@ -102,14 +107,19 @@ app.post('/debug', (req, res) => {
     res.status(400).write(data.toString());
     res.end();
 
-    racket.stdout.removeAllListeners();
-    racket.stderr.removeAllListeners();
-    racket.kill();
+    racket?.stdout.removeAllListeners();
+    racket?.stderr.removeAllListeners();
+    racket?.removeAllListeners(); // so that the exit event doesn't fire when we kill it
+    racket?.kill();
     racket = null;
   });
 
   racket.on('exit', (code, signal) => {
-    res.status(400).end();
+    try {
+      res.status(400).send("racket process exited");
+    } catch (e) {
+
+    }
   })
 });
 
@@ -117,7 +127,23 @@ app.get('(/*)?', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
+  if (!fs.existsSync("./tmp")){
+    fs.mkdirSync("./tmp");
+  }
+  // process.env["DOCKER_HOST"] = "unix:///var/run/docker.sock";
+  // console.log(process.env)
   console.log(`Example app listening on port ${port}`)
   console.log(`http://localhost:${port}`);
 })
+
+const io = socket(server, {cookie: false});
+
+io.on("connection", (socket) => {
+  console.log("made socket connection", socket.id);
+  socket.mk_profiler = {};
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+});

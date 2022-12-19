@@ -1,27 +1,20 @@
-FROM ubuntu:latest
-RUN apt update
-RUN apt install -y sudo
-RUN sudo apt install -y docker.io
-RUN sudo apt install -y curl
-RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt-get install -y nodejs
-RUN sudo apt install -y software-properties-common
-RUN sudo add-apt-repository ppa:plt/racket
-RUN sudo apt-get install -y racket
+FROM docker:dind
+RUN apk update
+RUN apk add bash
+RUN apk add --update nodejs npm
 
-WORKDIR /backend
+WORKDIR /profiler/backend
 COPY ./backend/package.json ./
 RUN npm install
 
-WORKDIR /frontend
+WORKDIR /profiler/frontend
 COPY ./frontend/package.json ./
 RUN npm install
 COPY ./frontend .
 RUN npm run build
 
-WORKDIR /debugger
-COPY ./debugger .
-
-WORKDIR /backend
+WORKDIR /profiler/backend
 COPY ./backend .
 RUN cp -r ../frontend/build .
-CMD npm start
+
+CMD /bin/bash docker_wrapper.sh

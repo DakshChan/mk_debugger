@@ -4,8 +4,8 @@
 (define replNamespace (namespace-anchor->namespace replAnchor))
 
 (require json)
-(require (file "{{$DEBUGGER_PATH}}"))
-(include (file "{{$USER_CODE}}"))
+(require (file "mk-fo.rkt"))
+(include (file "user-code.rkt"))
 ; potentially other includes possible here for multi file debugging
 
 (define (input-loop)

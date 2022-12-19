@@ -7,5 +7,5 @@ services:
       - "3000:3000"
     environment:
       - PORT=3000
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    privileged: true
