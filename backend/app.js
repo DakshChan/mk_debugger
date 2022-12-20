@@ -1,120 +1,141 @@
 const express = require('express');
 const path = require('path');
-const {resolve} = require('path');
 const cors = require('cors');
-const tmp = require('tmp');
-const formData = require('express-form-data');
 const { spawn } = require('child_process');
 const fs = require('fs');
+const socket = require("socket.io");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-
-app.use(formData.parse());
-
-app.use(express.static(path.join(__dirname, 'build')))
+app.use(express.static(path.join(__dirname, 'build')));
 
 // cors only being used when running react server, remove after react build
 app.use(cors({
   origin: '*'
 }));
 
-let userRepl = null;
-let racket = null;
-let racketBuf = null;
-
-app.post('/kill', (req, res) => {
-  racket?.kill?.();
-  racket = null;
-  racketBuf = null;
-  res.status(200).send('killed');
-});
-
-app.post('/code', (req, res) => {
-  //TODO: potentially reformat before sending back to client
-  let userCode = req.files.file.path;
-  console.log(userCode);
-  racket?.kill?.();
-  racketBuf = null;
-
-  console.log(resolve("../debugger/mk-fo.rkt").replaceAll("\\", "\\\\"));
-  let tmpRepl = tmp.fileSync({postfix: '.rkt'});
-  console.log(tmpRepl.name);
-  let modifiedRepl = fs.readFileSync("repl.rkt").toString()
-    .replace("{{$USER_CODE}}", userCode.replaceAll("\\", "\\\\"))
-    .replace("{{$DEBUGGER_PATH}}", resolve("../debugger/mk-fo.rkt").replaceAll("\\", "\\\\"))
-  fs.writeFileSync(tmpRepl.name, modifiedRepl);
-  userRepl = tmpRepl.name;
-
-  res.sendFile(userCode);
-});
-
-app.post('/debug', (req, res) => {
-  console.log(JSON.stringify(req.body));
-
-  if (userRepl === null) {
-    res.status(400).send("No code uploaded");
-    return;
-  }
-
-  racketBuf = "";
-  racket?.stdout?.removeAllListeners?.();
-  racket?.stderr?.removeAllListeners?.();
-
-  if (req.body.command === "run") { // run
-    racket?.kill?.();
-    racket = spawn("racket.exe", [userRepl]);
-
-  } else { // resume
-    if (racket === null) {
-      res.status(400).send("No racket process running");
-      return;
-    }
-  }
-
-  racket.stdin.write(JSON.stringify(req.body) + "\n");
-
-  racket.stdout.on('data', (data) => {
-    // console.log(`$stdout: ${data}`);
-    racketBuf += data;
-    try {
-      const resultJSON = JSON.parse(racketBuf);
-      // console.log(JSON.stringify(resultJSON));
-      resultJSON["program-points"] = resultJSON["program-points"].filter(x => x.syntax.source !== false)
-      // resultJSON["rejected-states"] = resultJSON["rejected-states"].map(x => {x.path = x.path.filter(y => y.source !== false); return x;});
-      // resultJSON["rejected-states"] = resultJSON["rejected-states"].map(x => {x.stack = x.stack.filter(y => y.source !== false); return x;});
-      // resultJSON["solutions"] = resultJSON["solutions"].map(x => {x.path = x.path.filter(y => y.source !== false); return x;});
-      // resultJSON["solutions"] = resultJSON["solutions"].map(x => {x.stack = x.stack.filter(y => y.source !== false); return x;});
-      // console.log(JSON.stringify(resultJSON));
-      res.json(resultJSON);
-      res.end();
-    } catch (e) {
-      // ignore because incomplete json, keep buffering
-    }
-  });
-
-  racket.stderr.on('data', (data) => {
-    console.error(`stderr: ${data.toString()}`);
-    res.status(400).write(data.toString());
-    res.end();
-
-    racket.stdout.removeAllListeners();
-    racket.stderr.removeAllListeners();
-    racket.kill();
-    racket = null;
-  });
-
-  racket.on('exit', (code, signal) => {
-    res.status(400).end();
-  })
-});
-
 app.get('(/*)?', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
+  if (!fs.existsSync("./tmp")){
+    fs.mkdirSync("./tmp");
+  }
   console.log(`Example app listening on port ${port}`)
   console.log(`http://localhost:${port}`);
 })
+
+const io = socket(server, {cookie: false, maxHttpBufferSize: 1e8}); // 100mb buffer
+
+io.on("connection", (socket) => {
+  { // initialization
+    console.log("made socket connection", socket.id);
+    socket.mk_profiler = {running: false, racket: null, racketBuf: null, codeContent: null};
+    fs.mkdirSync(`./tmp/${socket.id}`);
+  }
+
+  socket.on("disconnect", () => {
+    console.log("socket disconnected", socket.id);
+    if (socket.mk_profiler.running) {
+      socket.mk_profiler.racket?.stdout?.removeAllListeners();
+      socket.mk_profiler.racket?.stderr?.removeAllListeners();
+      socket.mk_profiler.racket?.removeAllListeners();
+      socket.mk_profiler.racket?.kill();
+      socket.mk_profiler.racket = null;
+      socket.mk_profiler.racketBuf = null;
+      socket.mk_profiler.running = false;
+    }
+    fs.rmSync(`./tmp/${socket.id}`, {recursive: true});
+  });
+
+  socket.on("kill" , (callback) => {
+    if (socket.mk_profiler.running) {
+      socket.mk_profiler.racket?.stdout?.removeAllListeners();
+      socket.mk_profiler.racket?.stderr?.removeAllListeners();
+      socket.mk_profiler.racket?.removeAllListeners();
+      socket.mk_profiler.racket.kill();
+      socket.mk_profiler.racket = null;
+      socket.mk_profiler.racketBuf = null;
+      socket.mk_profiler.running = false;
+      callback({ status: 200, message: "killed" });
+    } else {
+      callback({ status: 200, message: "not running" });
+    }
+  });
+
+  socket.on("code", (file, fileName, callback) => {
+    if (socket.mk_profiler.running) {
+      socket.mk_profiler.racket.kill();
+      socket.mk_profiler.racket = null;
+      socket.mk_profiler.racketBuf = null;
+      socket.mk_profiler.running = false;
+    }
+    fs.writeFileSync(`./tmp/${socket.id}/user-code.rkt`, file);
+    socket.mk_profiler.codeContent = file;
+    callback({ status: 200, message: "received", fileName: fileName, file: file });
+  });
+
+  socket.on("query", (query, callback) => {
+    if (socket.mk_profiler.codeContent === null) {
+      callback({ status: 400, message: "no code uploaded" });
+      return;
+    }
+
+    socket.mk_profiler.racketBuf = "";
+    socket.mk_profiler.racket?.stdout?.removeAllListeners();
+    socket.mk_profiler.racket?.stderr?.removeAllListeners();
+    socket.mk_profiler.racket?.removeAllListeners();
+
+    if (query.command === "run") {
+      socket.mk_profiler.racket = spawn("bash", ["-c", `exec docker run --rm -i $(docker build --rm -q --build-arg userRepl=${socket.id} -f racketDockerfile .)`]);
+      socket.mk_profiler.running = true;
+    } else if (query.command === "resume") {
+      if (!socket.mk_profiler.running) {
+        callback({ status: 400, message: "not running" });
+        return;
+      }
+    } else {
+      callback({ status: 400, message: "invalid command" });
+    }
+
+    socket.mk_profiler.racket.stdin.write(JSON.stringify(query) + "\n");
+
+    socket.mk_profiler.racket.stdout.on('data', (data) => {
+      // console.log(`$stdout: ${data}`);
+      socket.mk_profiler.racketBuf += data;
+      try {
+        const resultJSON = JSON.parse(socket.mk_profiler.racketBuf);
+        // console.log(JSON.stringify(resultJSON));
+        resultJSON["program-points"] = resultJSON["program-points"].filter(x => x.syntax.source !== false)
+        // console.log(JSON.stringify(resultJSON));
+
+        socket.mk_profiler.racket?.stdout?.removeAllListeners();
+        socket.mk_profiler.racket?.stderr?.removeAllListeners();
+        socket.mk_profiler.racket?.removeAllListeners();
+        callback({ status: 200, message: "success", data: resultJSON });
+      } catch (e) {
+        // ignore because incomplete json, keep buffering
+      }
+    });
+
+    socket.mk_profiler.racket.stderr.on('data', (data) => {
+      console.error(`stderr: ${data.toString()}`);
+
+      socket.mk_profiler.racketBuf = "";
+      socket.mk_profiler.running = false;
+      socket.mk_profiler.racket?.stdout?.removeAllListeners();
+      socket.mk_profiler.racket?.stderr?.removeAllListeners();
+      socket.mk_profiler.racket?.removeAllListeners(); // so that the exit event doesn't fire when we kill it
+      socket.mk_profiler.racket?.kill();
+      socket.mk_profiler.racket = null;
+
+      callback({ status: 400, message: "error", data: data.toString() });
+    });
+
+    socket.mk_profiler.racket.on('exit', (code, signal) => {
+      socket.emit("exit", {code, signal});
+    })
+  });
+});

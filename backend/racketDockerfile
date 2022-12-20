@@ -1,0 +1,9 @@
+FROM racket/racket:8.7-full
+
+ARG userRepl
+RUN echo "ARGS is ${userRepl}"
+WORKDIR /profiler
+COPY ./debugger ./
+COPY ./tmp/${userRepl}/user-code.rkt ./
+
+CMD ["racket", "/profiler/repl.rkt"]

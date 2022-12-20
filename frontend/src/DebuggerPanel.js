@@ -1,10 +1,8 @@
-import axios from "axios";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 import { useLocalStorage } from '@rehooks/local-storage';
 import "./DebuggerPanel.css";
 
-export default function DebuggerPanel({setDebug, fileName}) {
+export default function DebuggerPanel({sendKill, sendQuery, fileName}) {
   const {register, handleSubmit} = useForm();
   const [queryCache, setQueryCache] = useLocalStorage('queryCache', {});
 
@@ -21,23 +19,12 @@ export default function DebuggerPanel({setDebug, fileName}) {
     query.samples = samples.toString();
     query.steps = steps.toString();
     console.log(query);
-    const url = 'http://localhost:3000/debug';
-    axios.postForm(url, query).then((response) => {
-      console.log(response.data);
-      setDebug(response.data);
-    }).catch((error) => {
-      console.log(error);
-    });
+    sendQuery(query);
   }
 
   const killProcess = (e) => {
     e.preventDefault();
-    const url = 'http://localhost:3000/kill';
-    axios.post(url).then((response) => {
-      console.log(response.status);
-    }).catch((error) => {
-      console.log(error);
-    });
+    sendKill();
   }
 
   return (
