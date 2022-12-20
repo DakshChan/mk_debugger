@@ -10,6 +10,7 @@ import RunResume from "./RunResume";
 import QueryForm from "./QueryForm";
 
 import io from 'socket.io-client';
+import QueryPanel from "./QueryPanel";
 const socket = io();
 
 function App() {
@@ -18,6 +19,9 @@ function App() {
   const [codeHighlight, setCodeHighlight] = useState({"info": "encounters", "style": "color"});
   const [pointDebug, setPointDebug] = useState(undefined);
   const [fileName, setFileName] = useState("");
+  const [running, setRunning] = useState(false);
+  const [timeInfo, setTimeInfo] = useState(null);
+  const [queries, setQueries] = useState({});
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -42,6 +46,7 @@ function App() {
   const sendKill = () => {
     socket.emit('kill', (data) => {
       console.log(data);
+      setRunning(false);
     });
   };
 
@@ -51,20 +56,25 @@ function App() {
       setCode((new TextDecoder("utf-8")).decode(data.file));
       setDebug(undefined);
       setFileName(data.fileName);
+      setRunning(false);
     });
   };
 
-  const sendQuery = (query) => {
+  const sendQuery = (q) => {
+    setRunning(true);
+    let query = {...q, ...queries};
+    console.log(query);
     socket.emit('query', query, (data) => {
       console.log(data);
-      setDebug(data.data)
+      setDebug(data.data);
+      setRunning(false);
     });
   }
 
   return (
     <div>
       <div style={{display: "flex"}}>
-        <UploadCode setCode={setCode} setDebug={setDebug} fileName={fileName} setFileName={setFileName}/>
+        <UploadCode sendCode={sendCode} fileName={fileName}/>
         <div>
           <p style={{margin: 0}}>Highlighting</p>
           <select defaultValue={"failures"} onChange={(event) => setCodeHighlight({...codeHighlight, "info": event.target.value})}>
@@ -75,15 +85,15 @@ function App() {
             <option value={"successRatio"}>Success Ratio</option>
           </select>
         </div>
-        <RunResume/>
+        <RunResume running={running} sendQuery={sendQuery} sendKill={sendKill} timeInfo={timeInfo}/>
       </div>
-      <QueryForm/>
+      <QueryPanel setQueries={setQueries}/>
       {/*<DebuggerPanel setDebug={setDebug} fileName={fileName}/>*/}
-        {/*<select defaultValue={"color"} onChange={(event) => setCodeHighlight({...codeHighlight, "style": event.target.value})}>*/}
-        {/*  <option value={"none"}>None</option>*/}
-        {/*  <option value={"color"}>Color</option>*/}
-        {/*  <option value={"bars"}>Bars</option>*/}
-        {/*</select>*/}
+      {/*<select defaultValue={"color"} onChange={(event) => setCodeHighlight({...codeHighlight, "style": event.target.value})}>*/}
+      {/*  <option value={"none"}>None</option>*/}
+      {/*  <option value={"color"}>Color</option>*/}
+      {/*  <option value={"bars"}>Bars</option>*/}
+      {/*</select>*/}
       <div style={{display: "flex", flexDirection:"row", height: "calc(100vh - 20em)", width: "100vw"}}>
         <CodeContainer code={code} debug={debug} codeHighlight={codeHighlight} setPointDebug={setPointDebug}/>
         <div style={{width: "-webkit-fill-available"}}>

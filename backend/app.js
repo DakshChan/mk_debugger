@@ -82,6 +82,7 @@ io.on("connection", (socket) => {
       callback({ status: 400, message: "no code uploaded" });
       return;
     }
+    console.log("query", query);
 
     socket.mk_profiler.racketBuf = "";
     socket.mk_profiler.racket?.stdout?.removeAllListeners();
@@ -100,6 +101,7 @@ io.on("connection", (socket) => {
       callback({ status: 400, message: "invalid command" });
     }
 
+    console.log(JSON.stringify(query) + "\n");
     socket.mk_profiler.racket.stdin.write(JSON.stringify(query) + "\n");
 
     socket.mk_profiler.racket.stdout.on('data', (data) => {
