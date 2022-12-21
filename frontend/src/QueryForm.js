@@ -16,29 +16,21 @@ export default function QueryForm({id, queryData, setQueryData}) {
   }, [setQueryData, solutions, samples, steps, queryVars, query, id]);
 
   return (
-    <div style={{display: "flex"}}>
-      <p style={{margin: "0 0.2em", fontSize:"1.3em"}}>( run </p>
-      <div>
-        <div>
+    <div style={{display: "flex", gap: "0.2em"}}>
+      <p style={{margin: "0", fontSize:"1.3em"}}>( run </p>
+      <div style={{display: "flex", flexDirection: "column", gap:"0.1em"}}>
           <input type={"number"} placeholder={"solutions"} value={solutions}
                  onChange={event => setSolutions(event.target.value)}/>
-        </div>
-        <div>
           <input type={"number"} placeholder={"samples"} value={samples}
                  onChange={event => setSamples(event.target.value)}/>
-        </div>
-        <div>
           <input type={"number"} placeholder={"steps"} value={steps}
                  onChange={event => setSteps(event.target.value)}/>
-        </div>
-        <div>
           <input type={"text"} placeholder={"query variables"} value={queryVars}
                  onChange={event => setQueryVars(event.target.value)}/>
-        </div>
       </div>
       <textarea type={"text"} placeholder={"query"} value={query}
                 onChange={event => setQuery(event.target.value)}/>
-      <p style={{margin: "0 0.2em", fontSize:"1.3em"}}>)</p>
+      <p style={{margin: "0", fontSize:"1.3em"}}>)</p>
     </div>
   );
 }

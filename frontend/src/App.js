@@ -5,9 +5,7 @@ import { useEffect, useState } from "react";
 import './App.css';
 import SolutionInfoPanel from "./SolutionInfoPanel";
 import RejectionInfoPanel from "./RejectionInfoPanel";
-import TimeInfoPanel from "./TimeInfoPanel";
 import RunResume from "./RunResume";
-import QueryForm from "./QueryForm";
 
 import io from 'socket.io-client';
 import QueryPanel from "./QueryPanel";
@@ -16,20 +14,22 @@ const socket = io();
 function App() {
   const [code, setCode] = useState("");
   const [debug, setDebug] = useState(undefined);
-  const [codeHighlight, setCodeHighlight] = useState({"info": "encounters", "style": "color"});
+  const [codeHighlight, setCodeHighlight] = useState({"info": "failures", "style": "color"});
   const [pointDebug, setPointDebug] = useState(undefined);
   const [fileName, setFileName] = useState("");
   const [running, setRunning] = useState(false);
-  const [timeInfo, setTimeInfo] = useState(null);
   const [queries, setQueries] = useState({});
+  const [serverConnected, setServerConnected] = useState(false);
 
   useEffect(() => {
     socket.on('connect', () => {
       console.log("Connected to server");
+      setServerConnected(true);
     });
 
     socket.on('disconnect', () => {
       console.log("Disconnected from server");
+      setServerConnected(false);
     });
 
     socket.on('exit', (code, signal) => {
@@ -85,19 +85,13 @@ function App() {
             <option value={"successRatio"}>Success Ratio</option>
           </select>
         </div>
-        <RunResume running={running} sendQuery={sendQuery} sendKill={sendKill} timeInfo={timeInfo}/>
+        {(serverConnected) ? <></> : <p style={{margin:0, fontWeight: "bolder", color: "red"}}>Server disconnected!</p>}
+        <RunResume running={running} sendQuery={sendQuery} sendKill={sendKill} debug={debug}/>
       </div>
       <QueryPanel setQueries={setQueries}/>
-      {/*<DebuggerPanel setDebug={setDebug} fileName={fileName}/>*/}
-      {/*<select defaultValue={"color"} onChange={(event) => setCodeHighlight({...codeHighlight, "style": event.target.value})}>*/}
-      {/*  <option value={"none"}>None</option>*/}
-      {/*  <option value={"color"}>Color</option>*/}
-      {/*  <option value={"bars"}>Bars</option>*/}
-      {/*</select>*/}
       <div style={{display: "flex", flexDirection:"row", height: "calc(100vh - 20em)", width: "100vw"}}>
         <CodeContainer code={code} debug={debug} codeHighlight={codeHighlight} setPointDebug={setPointDebug}/>
         <div style={{width: "-webkit-fill-available"}}>
-          {/*<TimeInfoPanel debug={debug}/>*/}
           <PointInfoPanel pointDebug={pointDebug} code={code}/>
           <SolutionInfoPanel debug={debug} code={code}/>
           <RejectionInfoPanel debug={debug} code={code}/>

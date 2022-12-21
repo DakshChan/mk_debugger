@@ -54,12 +54,11 @@ export default function RejectionInfoPanel({debug, code}) {
                          placeholder={"0 -> " + (rejection.length - 1)}
                          onChange={event => setInputIndex(event.target.value)}/>
                   {
-                    (inputIndex !== "" && (parseInt(inputIndex) < 0 || parseInt(inputIndex) > (rejection.length - 1))) ?
+                    (inputIndex === "") ? <></> :
+                    ((parseInt(inputIndex) < 0 || parseInt(inputIndex) > (rejection.length - 1)) ?
                       <p>Invalid Number</p> :
-                      ((state !== undefined) ?
-                          <StateInfoPanel state={state} code={code}/> :
-                          <></>
-                      )
+                      <StateInfoPanel state={state} code={code}/>
+                    )
                   }
                 </> :
                 <p>No rejections</p>

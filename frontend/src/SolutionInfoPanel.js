@@ -1,7 +1,6 @@
 import "./InfoPanel.css"
 import StateInfoPanel from "./StateInfoPanel";
 import {useEffect, useState} from "react";
-import md5 from "md5";
 
 export default function SolutionInfoPanel({debug, code}) {
   const [state, setState] = useState(undefined);
@@ -55,12 +54,11 @@ export default function SolutionInfoPanel({debug, code}) {
                        placeholder={"0 -> " + (solution.length - 1)} value={inputIndex}
                        onChange={event => setInputIndex(event.target.value)} />
                 {
-                  (inputIndex !== "" && (parseInt(inputIndex) < 0 || parseInt(inputIndex) > (solution.length - 1))) ?
+                  (inputIndex === "") ? <></> :
+                  ((parseInt(inputIndex) < 0 || parseInt(inputIndex) > (solution.length - 1)) ?
                     <p>Invalid Number</p> :
-                    ((state !== undefined) ?
-                        <StateInfoPanel state={state} code={code}/> :
-                        <></>
-                    )
+                    <StateInfoPanel state={state} code={code}/>
+                  )
                 }
               </> :
               <p>No solutions</p>
