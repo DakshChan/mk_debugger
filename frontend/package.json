@@ -3,16 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@chakra-ui/react": "^2.4.4",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "@rehooks/local-storage": "^2.4.4",
+    "framer-motion": "^8.0.1",
     "md5": "^2.3.0",
     "react": "^18.2.0",
     "react-collapsible": "^2.10.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.33.1",
     "react-scripts": "5.0.1",
-    "socket.io-client": "^4.5.4",
     "react-spinners": "^0.13.6",
-    "react-timer-hook": "^3.0.5"
+    "react-timer-hook": "^3.0.5",
+    "socket.io-client": "^4.5.4"
   },
   "overrides": {
     "nth-check": "^2.1.1"

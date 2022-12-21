@@ -6,6 +6,13 @@ import './App.css';
 import SolutionInfoPanel from "./SolutionInfoPanel";
 import RejectionInfoPanel from "./RejectionInfoPanel";
 import RunResume from "./RunResume";
+import { Select, useToast } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from '@chakra-ui/react'
 
 import io from 'socket.io-client';
 import QueryPanel from "./QueryPanel";
@@ -19,12 +26,33 @@ function App() {
   const [fileName, setFileName] = useState("");
   const [running, setRunning] = useState(false);
   const [queries, setQueries] = useState({});
-  const [serverConnected, setServerConnected] = useState(false);
+  const [serverConnected, setServerConnected] = useState(true);
+
+  const toast = useToast();
 
   useEffect(() => {
     socket.on('connect', () => {
       console.log("Connected to server");
       setServerConnected(true);
+      toast({
+        position: "bottom-left",
+        title: "Connected to server",
+        status: "success",
+        duration: 3000,
+        isClosable: true
+      })
+    });
+
+    socket.on('connect_error', () => {
+      console.log("Connection to server failed");
+      setServerConnected(false);
+      toast({
+        position: "bottom-left",
+        title: "Connection to server failed",
+        status: "error",
+        duration: 3000,
+        isClosable: true
+      })
     });
 
     socket.on('disconnect', () => {
@@ -34,6 +62,14 @@ function App() {
 
     socket.on('exit', (code, signal) => {
       console.log("Racket process exited with code", code, "and signal", signal);
+      setRunning(false);
+      toast({
+        position: "bottom-left",
+        title: "Racket process exited",
+        description: `Code: ${code}, Signal: ${signal}`,
+        status: "error",
+        isClosable: true
+      });
     });
 
     return () => {
@@ -47,6 +83,12 @@ function App() {
     socket.emit('kill', (data) => {
       console.log(data);
       setRunning(false);
+      toast({
+        position: "bottom-left",
+        title: "Racket process killed",
+        status: "success",
+        isClosable: true
+      });
     });
   };
 
@@ -57,6 +99,12 @@ function App() {
       setDebug(undefined);
       setFileName(data.fileName);
       setRunning(false);
+      toast({
+        position: "bottom-left",
+        title: "Code uploaded",
+        status: "success",
+        isClosable: true
+      });
     });
   };
 
@@ -68,24 +116,36 @@ function App() {
       console.log(data);
       setDebug(data.data);
       setRunning(false);
+      toast({
+        position: "bottom-left",
+        title: data.message,
+        status: (data.status === 200) ? "success" : "error",
+        ... ((data.status === 500) ? {description: data.body} : {}),
+        isClosable: true
+      });
     });
   }
 
   return (
     <div>
+      {(serverConnected) ? <></> :
+        <Alert status='error'>
+          <AlertIcon />
+          <AlertTitle>Server not connected!</AlertTitle>
+        </Alert>
+      }
       <div style={{display: "flex"}}>
         <UploadCode sendCode={sendCode} fileName={fileName}/>
         <div>
           <p style={{margin: 0}}>Highlighting</p>
-          <select defaultValue={"failures"} onChange={(event) => setCodeHighlight({...codeHighlight, "info": event.target.value})}>
+          <Select size={"sm"} defaultValue={"failures"} onChange={(event) => setCodeHighlight({...codeHighlight, "info": event.target.value})}>
             <option value={"encounters"}>Encounters</option>
             <option value={"failures"}>Failures</option>
             <option value={"failRatio"}>Failure Ratio</option>
             <option value={"successes"}>Successes</option>
             <option value={"successRatio"}>Success Ratio</option>
-          </select>
+          </Select>
         </div>
-        {(serverConnected) ? <></> : <p style={{margin:0, fontWeight: "bolder", color: "red"}}>Server disconnected!</p>}
         <RunResume running={running} sendQuery={sendQuery} sendKill={sendKill} debug={debug}/>
       </div>
       <QueryPanel setQueries={setQueries}/>
