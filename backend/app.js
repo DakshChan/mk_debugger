@@ -79,9 +79,10 @@ io.on("connection", (socket) => {
 
   socket.on("query", (query, callback) => {
     if (socket.mk_profiler.codeContent === null) {
-      callback({ status: 400, message: "no code uploaded" });
+      callback({ status: 400, message: "No code uploaded" });
       return;
     }
+    console.log("query", query);
 
     socket.mk_profiler.racketBuf = "";
     socket.mk_profiler.racket?.stdout?.removeAllListeners();
@@ -93,13 +94,14 @@ io.on("connection", (socket) => {
       socket.mk_profiler.running = true;
     } else if (query.command === "resume") {
       if (!socket.mk_profiler.running) {
-        callback({ status: 400, message: "not running" });
+        callback({ status: 400, message: "Process not running" });
         return;
       }
     } else {
-      callback({ status: 400, message: "invalid command" });
+      callback({ status: 400, message: "Invalid command" });
     }
 
+    console.log(JSON.stringify(query) + "\n");
     socket.mk_profiler.racket.stdin.write(JSON.stringify(query) + "\n");
 
     socket.mk_profiler.racket.stdout.on('data', (data) => {
@@ -114,7 +116,7 @@ io.on("connection", (socket) => {
         socket.mk_profiler.racket?.stdout?.removeAllListeners();
         socket.mk_profiler.racket?.stderr?.removeAllListeners();
         socket.mk_profiler.racket?.removeAllListeners();
-        callback({ status: 200, message: "success", data: resultJSON });
+        callback({ status: 200, message: "Query success", data: resultJSON });
       } catch (e) {
         // ignore because incomplete json, keep buffering
       }
@@ -131,7 +133,7 @@ io.on("connection", (socket) => {
       socket.mk_profiler.racket?.kill();
       socket.mk_profiler.racket = null;
 
-      callback({ status: 400, message: "error", data: data.toString() });
+      callback({ status: 500, message: "Query error", body: data.toString() });
     });
 
     socket.mk_profiler.racket.on('exit', (code, signal) => {

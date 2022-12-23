@@ -35,31 +35,27 @@ export default function CodeContainer ({code, debug, codeHighlight, setPointDebu
   }, [code, parsedLines, codeHighlight, range]);
 
   useEffect(() => {
-    if (codeHighlight.info === "encounters") {
-      let maxEncounter = Number.MIN_SAFE_INTEGER;
-      let minEncounter = Number.MAX_SAFE_INTEGER;
-      let maxFailure = Number.MIN_SAFE_INTEGER;
-      let minFailure = Number.MAX_SAFE_INTEGER;
-      let maxSuccess = Number.MIN_SAFE_INTEGER;
-      let minSuccess = Number.MAX_SAFE_INTEGER;
+    let maxEncounter = Number.MIN_SAFE_INTEGER;
+    let minEncounter = Number.MAX_SAFE_INTEGER;
+    let maxFailure = Number.MIN_SAFE_INTEGER;
+    let minFailure = Number.MAX_SAFE_INTEGER;
+    let maxSuccess = Number.MIN_SAFE_INTEGER;
+    let minSuccess = Number.MAX_SAFE_INTEGER;
 
-      if (debug !== undefined){
-        for (let i = 0; i < debug["program-points"].length; i++) {
-          maxEncounter = debug["program-points"][i]["count"] > maxEncounter ? debug["program-points"][i]["count"] : maxEncounter;
-          minEncounter = debug["program-points"][i]["count"] < minEncounter ? debug["program-points"][i]["count"] : minEncounter;
-          maxFailure = debug["program-points"][i]["fails"] > maxFailure ? debug["program-points"][i]["fails"] : maxFailure;
-          minFailure = debug["program-points"][i]["fails"] < minFailure ? debug["program-points"][i]["fails"] : minFailure;
-          maxSuccess = debug["program-points"][i]["successes"] > maxSuccess ? debug["program-points"][i]["successes"] : maxSuccess;
-          minSuccess = debug["program-points"][i]["successes"] < minSuccess ? debug["program-points"][i]["successes"] : minSuccess;
-        }
+    if (debug !== undefined){
+      for (let i = 0; i < debug["program-points"].length; i++) {
+        maxEncounter = debug["program-points"][i]["count"] > maxEncounter ? debug["program-points"][i]["count"] : maxEncounter;
+        minEncounter = debug["program-points"][i]["count"] < minEncounter ? debug["program-points"][i]["count"] : minEncounter;
+        maxFailure = debug["program-points"][i]["fails"] > maxFailure ? debug["program-points"][i]["fails"] : maxFailure;
+        minFailure = debug["program-points"][i]["fails"] < minFailure ? debug["program-points"][i]["fails"] : minFailure;
+        maxSuccess = debug["program-points"][i]["successes"] > maxSuccess ? debug["program-points"][i]["successes"] : maxSuccess;
+        minSuccess = debug["program-points"][i]["successes"] < minSuccess ? debug["program-points"][i]["successes"] : minSuccess;
       }
-      setRange({encounters: {max: maxEncounter, min: minEncounter},
-        failures: {max: maxFailure, min: minFailure}, successes:
-      {max: maxSuccess, min: minSuccess}});
-    } else if (codeHighlight.info === "failures") {
-      //tbd when failure data is available
     }
-  }, [debug, codeHighlight]);
+    setRange({encounters: {max: maxEncounter, min: minEncounter},
+      failures: {max: maxFailure, min: minFailure},
+      successes: {max: maxSuccess, min: minSuccess}});
+  }, [debug]);
 
   if (debug !== undefined) {
     return (

@@ -1,45 +1,71 @@
 import "./InfoPanel.css"
 import StateInfoPanel from "./StateInfoPanel";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 export default function SolutionInfoPanel({debug, code}) {
   const [state, setState] = useState(undefined);
+  const [solution, setSolution] = useState(undefined);
+  const [inputIndex, setInputIndex] = useState("");
 
-  function handleStateSelect(e) {
-    if (e.target.value === "") {
+  useEffect(() => {
+    if (debug !== undefined) {
+      setSolution(debug.solutions);
+    } else {
+      setSolution(undefined);
+    }
+    setState(undefined);
+    setInputIndex("");
+  }, [debug]);
+
+  useEffect(() => {
+    setState(undefined);
+    setSolution(undefined);
+    setInputIndex("");
+  }, [code]);
+
+  useEffect(() => {
+    if (inputIndex === "") {
       setState(undefined)
       return;
     }
-    let n = parseInt(e.target.value);
-    if (n < 0 || n >= debug.solutions.length) {
+    if (solution === undefined) {
       setState(undefined);
       return;
     }
-    setState(debug.solutions[n]);
-  }
+    let n = parseInt(inputIndex);
+    if (n < 0 || n >= solution.length) {
+      setState(undefined);
+      return;
+    }
+    setState(solution[n]);
+  }, [inputIndex]);
 
-  if (debug !== undefined) {
-    return (
-      <div className={"solution-info-panel"}>
-        <h3>Solution panel</h3>
-        {
-          debug.solutions.length > 0 ?
-            <>
-              <p>{"0-" + (debug.solutions.length - 1)}</p>
-              <input type={"number"} min={0} max={debug.solutions.length - 1}
-                     placeholder={"0-" + (debug.solutions.length - 1)} onInput={handleStateSelect}/>
-              {state !== "" ? <StateInfoPanel state={state} code={code}/> : <p>Select state</p>}
-            </> :
-            <p>No solutions</p>
-        }
-      </div>
-    );
-  } else {
-    return (
-      <div className={"solution-info-panel"}>
-        <h3>Solution panel</h3>
+  return (
+    <div className={"solution-info-panel"}>
+      <h3>Solution panel</h3>
+      {
+        solution !== undefined ?
+        <>
+          {
+            solution.length > 0 ?
+              <>
+                <p>{"Enter a number from 0 -> " + (solution.length - 1)}</p>
+                <input type={"number"} min={0} max={solution.length - 1}
+                       placeholder={"0 -> " + (solution.length - 1)} value={inputIndex}
+                       onChange={event => setInputIndex(event.target.value)} />
+                {
+                  (inputIndex === "") ? <></> :
+                  ((parseInt(inputIndex) < 0 || parseInt(inputIndex) > (solution.length - 1)) ?
+                    <p>Invalid Number</p> :
+                    <StateInfoPanel state={state} code={code}/>
+                  )
+                }
+              </> :
+              <p>No solutions</p>
+          }
+        </> :
         <p>Run a query</p>
-      </div>
-    );
-  }
+      }
+    </div>
+  );
 }
