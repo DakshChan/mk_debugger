@@ -353,12 +353,12 @@
 
 ; JSON Formatting
 
-(define (debug/json sts pp-map failed-lst time)
-  (write-json (debug/jsexpr sts pp-map failed-lst time)))
+(define (debug/json sts pp-map failed-lst qvars time)
+  (write-json (debug/jsexpr sts pp-map failed-lst qvars time)))
 
-(define (debug/jsexpr sts pp-map failed-lst time)
-  (let ((solutions (map state/jsexpr sts))
-        (rejected-states (map failed-state/jsexpr failed-lst))
+(define (debug/jsexpr sts pp-map failed-lst qvars time)
+  (let ((solutions (map (lambda (x) (state/jsexpr qvars x)) sts))
+        (rejected-states (map (lambda (x) (failed-state/jsexpr qvars x)) failed-lst))
         (program-points (program-points/jsexpr pp-map))
         (time (time/jsexpr time)))
     (hash 'solutions solutions
@@ -366,38 +366,38 @@
           'program-points program-points
           'time time)))
 
-(define (state/jsexpr st)
-  (let ((binding  (reify/jsexpr       initial-var st))
-        (sub      (map sub/jsexpr     (state-sub st)))
-        (diseq    (map diseq/jsexpr   (state-diseq st)))
-        (types    (map type/jsexpr    (state-types st)))
-        (distypes (map distype/jsexpr (state-distypes st)))
+(define (state/jsexpr qvars st)
+  (let ((binding  (reify/jsexpr/qvars qvars initial-var st))
+;        (sub      (map sub/jsexpr     (state-sub st)))
+;        (diseq    (map diseq/jsexpr   (state-diseq st)))
+;        (types    (map type/jsexpr    (state-types st)))
+;        (distypes (map distype/jsexpr (state-distypes st)))
         (path     (map syntax/jsexpr  (state-path st)))
         (stack    (map syntax/jsexpr  (state-stack st))))
     (hash 'binding  binding
-          'sub      sub
-          'diseq    diseq
-          'types    types
-          'distypes distypes
+;          'sub      sub
+;          'diseq    diseq
+;          'types    types
+;          'distypes distypes
           'path     path
           'stack    stack)))
 
-(define/match (failed-state/jsexpr failed-state)
-  (((cons st cx))
-   (let ((binding  (reify/jsexpr       initial-var st))
-         (failed   (reify/jsexpr       cx st))
-         (sub      (map sub/jsexpr     (state-sub st)))
-         (diseq    (map diseq/jsexpr   (state-diseq st)))
-         (types    (map type/jsexpr    (state-types st)))
-         (distypes (map distype/jsexpr (state-distypes st)))
+(define/match (failed-state/jsexpr qvars failed-state)
+  ((qvars (cons st cx))
+   (let ((binding  (reify/jsexpr/qvars qvars initial-var st))
+         (failed   (reify/jsexpr             cx st))
+;         (sub      (map sub/jsexpr     (state-sub st)))
+;         (diseq    (map diseq/jsexpr   (state-diseq st)))
+;         (types    (map type/jsexpr    (state-types st)))
+;         (distypes (map distype/jsexpr (state-distypes st)))
          (path     (map syntax/jsexpr  (state-path st)))
          (stack    (map syntax/jsexpr  (state-stack st))))
      (hash 'binding  binding
            'failed   failed
-           'sub      sub
-           'diseq    diseq
-           'types    types
-           'distypes distypes
+;           'sub      sub
+;           'diseq    diseq
+;           'types    types
+;           'distypes distypes
            'path     path
            'stack    stack))))
 
@@ -431,6 +431,15 @@
           'position position
           'content  content
           'span     span)))
+
+(define (reify/jsexpr/qvars qvars tm st)
+  (let-values (((sub cxs)
+                (match (reify tm st)
+                  ; ((list (Ans walked-sub cxs) path) (values (make-hash (map list (map (lambda (x) (quote x)) qvars) (map ~s walked-sub))) (~s cxs)))
+                  ((list (Ans walked-sub cxs) path) (values (make-hash (map cons qvars (map ~s walked-sub))) (~s cxs)))
+                  ((list walked-sub path)           (values (make-hash (map cons qvars (map ~s walked-sub))) "")))))
+    (hash 'sub sub
+          'cxs cxs)))
 
 (define (reify/jsexpr tm st)
   (let-values (((sub cxs)

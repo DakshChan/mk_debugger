@@ -1,3 +1,5 @@
+import { Button } from "@chakra-ui/react";
+
 export default function UploadCode({sendCode, fileName}) {
   function handleChange(event) {
 
@@ -11,7 +13,7 @@ export default function UploadCode({sendCode, fileName}) {
   return (
     <>
       <label htmlFor="file_upload">
-        <button style={{pointerEvents: "none"}}>Choose file</button>
+        <Button size={"sm"} style={{pointerEvents: "none"}} variant='outline' >Choose file</Button>
         <span style={{fontSize:"small", marginInline:"1ch"}}>
           {fileName !== "" ? fileName : "No file chosen"}
         </span>

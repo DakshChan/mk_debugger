@@ -84,7 +84,7 @@
 (define (stream-take n i s)
   (stream-take-helper n i s '()))
 
-(define (stream-take/format-out n m i j s)
+(define (stream-take/format-out n m i j qvars s)
   (set-failed-lst-size! m)
   (let*-values (((out cpu real gc) (time-apply stream-take (list n i s)))
                 ((out)   (car out))
@@ -93,7 +93,7 @@
     (set-paused-solns! (append paused-solns solns))
     (set-paused-stream! s)
     (if j
-        (debug/json paused-solns pp-map failed-lst (list cpu real gc))
+        (debug/json paused-solns pp-map failed-lst qvars (list cpu real gc))
         (map reify/initial-var paused-solns))))
 
 ; n -- number of results to take (or #f for all)
@@ -102,7 +102,7 @@
 ; j -- #t to format output as JSON, #f otherwise
 (define-syntax run
   (syntax-rules ()
-    ((_ n m i j body ...) (stream-take/format-out n m i j (query/fresh body ...)))))
+    ((_ n m i j qvars body ...) (stream-take/format-out n m i j (quote qvars) (query/fresh qvars body ...)))))
 
 (define (resume n m i j)
   (stream-take/format-out n m i j paused-stream))

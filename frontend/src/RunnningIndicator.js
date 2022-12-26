@@ -17,7 +17,7 @@ export default function RunningIndicator({running, debug}) {
     }
   }, [running]);
   return (
-    <div className={"running-indicator"}>
+    <div className={"running-indicator"} style={{marginRight: "1ch"}}>
       {loading ?
         <div style={{position:"relative"}}>
           <MoonLoader color="#36d7b7" size={"50px"}/>

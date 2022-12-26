@@ -1,8 +1,9 @@
 import {useEffect, useState} from "react";
 
-export default function ProgramPoint({children, data, range, codeHighlight, setPointDebug}) {
+export default function ProgramPoint({children, data, range, codeHighlight, pointDebug, setPointDebug}) {
 
   const [color, setColor] = useState("argb(255, 0, 0, 100)");
+
 
   useEffect(() => {
     colorMap(setColor, codeHighlight, range, data);
@@ -10,7 +11,10 @@ export default function ProgramPoint({children, data, range, codeHighlight, setP
 
   return (
     <>
-      <span className="program-point" onClick={() => setPointDebug(data)} style={{background: color, borderRadius: "0.3em", outlineStyle:"solid", outlineColor: "#000", outlineWidth:"0.1em"}}>
+      <span className="program-point"
+            onClick={() => {if (pointDebug === data) {setPointDebug(undefined)} else {setPointDebug(data)}}}
+            style={{background: color, borderRadius: "0.3em", outlineStyle:"solid",
+              outlineColor: "#000", outlineWidth:"0.1em"}}>
         {children}
       </span>
     </>

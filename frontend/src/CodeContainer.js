@@ -5,7 +5,7 @@ import ProgramPoint from "./ProgramPoint";
 import md5 from "md5";
 import "./CodeContainer.css";
 
-export default function CodeContainer ({code, debug, codeHighlight, setPointDebug}) {
+export default function CodeContainer ({code, debug, codeHighlight, pointDebug, setPointDebug}) {
   const [parsedLines, setParsedLines] = useState([]);
   const [range, setRange] = useState({encounters: {max: 0, min: 0}, failures: {max: 0, min: 0}, successes: {max: 0, min: 0}});
   const [scroll, setScroll] = useState(0);
@@ -30,7 +30,7 @@ export default function CodeContainer ({code, debug, codeHighlight, setPointDebu
     }
   }, [code, debug]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     Prism.highlightAll();
   }, [code, parsedLines, codeHighlight, range]);
 
@@ -64,7 +64,7 @@ export default function CodeContainer ({code, debug, codeHighlight, setPointDebu
           {
             parsedLines.map((line, index) => {
               if (line.data !== undefined) {
-                return <ProgramPoint key={md5(line.text) + index} data={line.data} range={range} codeHighlight={codeHighlight} setPointDebug={setPointDebug}>{line.text}</ProgramPoint>
+                return <ProgramPoint key={md5(line.text) + index} data={line.data} range={range} codeHighlight={codeHighlight} pointDebug={pointDebug} setPointDebug={setPointDebug}>{line.text}</ProgramPoint>
               } else {
                 return <span key={md5(line.text) + index}>{line.text}</span>
               }

@@ -1,4 +1,5 @@
 import RunningIndicator from "./RunnningIndicator";
+import {Button, ButtonGroup} from "@chakra-ui/react";
 
 export default function RunResume({sendQuery, sendKill, fileName, running, debug}) {
   const executeRun = (e) => {
@@ -18,12 +19,17 @@ export default function RunResume({sendQuery, sendKill, fileName, running, debug
 
   return (
     <>
-      <div style={{flex: 1, gap: "1ch"}}>
-        <button onClick={executeRun}>Run</button>
-        <button onClick={executeResume}>Resume</button>
-        <button onClick={killProcess}>Kill</button>
+      <ButtonGroup size='sm' isAttached variant='outline'>
+        <Button isLoading={running} onClick={executeRun} loadingText={"Running"}>Run</Button>
+        <Button isDisabled={running} onClick={executeResume}>Resume</Button>
+        <Button onClick={killProcess}>Kill</Button>
+      </ButtonGroup>
+      {/*<RunningIndicator running={running} debug={debug}/>*/}
+      <div style={{display: "flex", gap: "1ch"}}>
+        <p>{`Cpu: ${debug?.time?.cpu ?? 0}`}</p>
+        <p>{`GC: ${debug?.time?.gc ?? 0}`}</p>
+        <p>{`Real: ${debug?.time?.real ?? 0}`}</p>
       </div>
-      <RunningIndicator running={running} debug={debug}/>
     </>
   );
 }
