@@ -30,11 +30,7 @@ export default function RejectionInfoPanel({debug, code}) {
 
   return (
     <div className={"rejection-info-panel"}>
-      <Drawer
-        isOpen={isOpen}
-        placement='right'
-        onClose={onClose}
-      >
+      <Drawer isOpen={isOpen} placement='right' onClose={onClose} size={"md"}>
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader>Path/Stack</DrawerHeader>
@@ -88,7 +84,7 @@ export default function RejectionInfoPanel({debug, code}) {
         <TableContainer overflowY={"auto"} maxHeight={`${5 * 3 + 1.5}em`}
                         scrollSnapType={"y mandatory"} style={{scrollPaddingBlockStart: "1.5em"}}>
         <Table variant={"striped"} size={"sm"} colorScheme={"orange"}>
-          <Thead position={"sticky"} top={"0"} style={{backgroundColor: "#f5f8fb"}}>
+          <Thead position={"sticky"} top={"0"} style={{backgroundColor: "#f5f8fb", zIndex: "1"}}>
             <Tr>
               <Th>Terms</Th>
               <Th>Constraints</Th>
@@ -120,7 +116,7 @@ export default function RejectionInfoPanel({debug, code}) {
                     <Td><p style={{whiteSpace: "break-spaces"}}>{s.binding.cxs || "N/A"}</p></Td>
                     <Td><p style={{whiteSpace: "break-spaces"}}>{s.failed.sub}</p></Td>
                     <Td><p style={{whiteSpace: "break-spaces"}}>{s.failed.cxs || "N/A"}</p></Td>
-                    <Td><Button size={"sm"} onClick={() => {setState(s); onOpen()}}>Path/Stack</Button></Td>
+                    <Td><Button size={"sm"} style={{zIndex: 0}} onClick={() => {setState(s); onOpen()}}>Path/Stack</Button></Td>
                   </Tr>
                 )
               })

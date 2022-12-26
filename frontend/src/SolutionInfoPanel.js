@@ -84,7 +84,7 @@ export default function SolutionInfoPanel({debug, code}) {
         <TableContainer overflowY={"auto"} maxHeight={`${5 * 3 + 1.5}em`}
                         scrollSnapType={"y mandatory"} style={{scrollPaddingBlockStart: "1.5em"}}>
           <Table variant={"striped"} size={"sm"} colorScheme={"orange"}>
-            <Thead position={"sticky"} top={"0"} style={{backgroundColor: "#f5f8fb"}}>
+            <Thead position={"sticky"} top={"0"} style={{backgroundColor: "#f5f8fb", zIndex: "1"}}>
               <Tr>
                 <Th>Terms</Th>
                 <Th>Constraints</Th>
@@ -112,7 +112,7 @@ export default function SolutionInfoPanel({debug, code}) {
                         </div>
                       </Td>
                       <Td><p style={{whiteSpace: "break-spaces"}}>{s.binding.cxs || "N/A"}</p></Td>
-                      <Td><Button size={"sm"} onClick={() => {setState(s); onOpen()}}>Path</Button></Td>
+                      <Td><Button size={"sm"} style={{zIndex: 0}} onClick={() => {setState(s); onOpen()}}>Path</Button></Td>
                     </Tr>
                   )
                 })
