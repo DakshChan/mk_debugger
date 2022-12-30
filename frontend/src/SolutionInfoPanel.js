@@ -28,6 +28,12 @@ export default function SolutionInfoPanel({queries, code}) {
     setSolution(undefined);
   }, [code]);
 
+  useEffect(() => {
+    if (Object.keys(queries).length > 0) {
+      setDebug(queries["0"])
+    }
+  }, [queries]);
+
   return (
     <div className={"solution-info-panel"}>
       <Drawer isOpen={isOpen} placement='right' onClose={onClose} size={"md"}>
@@ -78,19 +84,19 @@ export default function SolutionInfoPanel({queries, code}) {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-      <Heading size={"md"}>Solutions {(solution !== undefined ? `- ${solution.length}` : "")}</Heading>
+      <Heading size={"md"}>Solutions {(solution !== undefined ? `: ${solution.length} Total` : "")}</Heading>
       { (Object.keys(queries).length > 0) ?
-        <Select width={"unset"} size={"sm"} defaultValue={""} onChange={(event) => setDebug(queries[event.target.value])}>
+        <Select width={"unset"} size={"sm"} onChange={(event) => setDebug(queries[event.target.value])}>
           {
-            Object.keys(queries).map((q) => {
-              return <option value={q}>{q}</option>
+            Object.keys(queries).map((q, key) => {
+              return <option key={key} value={q}>{q}</option>
             })
           }
         </Select> : <></>
       }
       {
         (solution !== undefined) ?
-        <TableContainer overflowY={"auto"} maxHeight={`${5 * 3 + 1.5}em`}
+        <TableContainer overflowY={"auto"} maxHeight={`${5 * 3}em`}
                         scrollSnapType={"y mandatory"} style={{scrollPaddingBlockStart: "1.5em"}}>
           <Table variant={"striped"} size={"sm"} colorScheme={"green"}>
             <Thead position={"sticky"} top={"0"} style={{backgroundColor: "#f5f8fb", zIndex: "1"}}>
@@ -120,7 +126,7 @@ export default function SolutionInfoPanel({queries, code}) {
                           }
                         </div>
                       </Td>
-                      <Td><p style={{whiteSpace: "break-spaces"}}>{s.binding.cxs || "N/A"}</p></Td>
+                      <Td><p style={{whiteSpace: "break-spaces"}}>{s.binding.cxs}</p></Td>
                       <Td><Button size={"sm"} style={{zIndex: 0}} onClick={() => {setState(s); onOpen()}}>Path</Button></Td>
                     </Tr>
                   )

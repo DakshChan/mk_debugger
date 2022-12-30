@@ -22,12 +22,12 @@ export default function PointInfoPanel({pointDebug, code}) {
   }, [code]);
 
   return (
-    <div className={"point-info-panel"}>
-      <div style={{display: "flex"}}>
-        <Heading size={"md"} style={{flexGrow: "1"}}>Point Panel</Heading>
-        <CloseButton onClick={onClose}/>
-      </div>
-      <Collapse in={isOpen} animateOpacity>
+    <Collapse in={isOpen} animateOpacity className={"point-info-panel"}>
+      <div>
+        <div style={{display: "flex"}}>
+          <Heading size={"md"} style={{flexGrow: "1"}}>Point Panel</Heading>
+          <CloseButton onClick={onClose}/>
+        </div>
         <div style={{display: "flex", gap: "3ch"}}>
          <p style={{whiteSpace: "nowrap"}}>Encounters: {state?.count}</p>
          <p style={{whiteSpace: "nowrap"}}>Failures: {state?.fails}</p>
@@ -40,7 +40,7 @@ export default function PointInfoPanel({pointDebug, code}) {
         <div>
            <p style={{whiteSpace: "break-spaces"}}>Syntax: {state?.syntax.content}</p>
         </div>
-      </Collapse>
-    </div>
+      </div>
+    </Collapse>
   );
 }
