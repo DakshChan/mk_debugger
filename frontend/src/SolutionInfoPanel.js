@@ -1,16 +1,16 @@
 import "./InfoPanel.css"
-import StateInfoPanel from "./StateInfoPanel";
 import React, {useEffect, useState} from "react";
 import {
   Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel,
   Button, Box, Heading, Input, useDisclosure,
   Table, TableContainer, Tbody, Td, Th, Thead, Tr,
-  Drawer, DrawerBody, DrawerFooter, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, Code,
+  Drawer, DrawerBody, DrawerFooter, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, Code, Select,
 } from "@chakra-ui/react";
 
-export default function SolutionInfoPanel({debug, code}) {
+export default function SolutionInfoPanel({queries, code}) {
   const [state, setState] = useState(undefined);
   const [solution, setSolution] = useState(undefined);
+  const [debug, setDebug] = useState(undefined);
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -79,11 +79,20 @@ export default function SolutionInfoPanel({debug, code}) {
         </DrawerContent>
       </Drawer>
       <Heading size={"md"}>Solutions {(solution !== undefined ? `- ${solution.length}` : "")}</Heading>
+      { (Object.keys(queries).length > 0) ?
+        <Select width={"unset"} size={"sm"} defaultValue={""} onChange={(event) => setDebug(queries[event.target.value])}>
+          {
+            Object.keys(queries).map((q) => {
+              return <option value={q}>{q}</option>
+            })
+          }
+        </Select> : <></>
+      }
       {
         (solution !== undefined) ?
         <TableContainer overflowY={"auto"} maxHeight={`${5 * 3 + 1.5}em`}
                         scrollSnapType={"y mandatory"} style={{scrollPaddingBlockStart: "1.5em"}}>
-          <Table variant={"striped"} size={"sm"} colorScheme={"orange"}>
+          <Table variant={"striped"} size={"sm"} colorScheme={"green"}>
             <Thead position={"sticky"} top={"0"} style={{backgroundColor: "#f5f8fb", zIndex: "1"}}>
               <Tr>
                 <Th>Terms</Th>

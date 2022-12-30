@@ -1,7 +1,18 @@
-import RunningIndicator from "./RunnningIndicator";
 import {Button, ButtonGroup} from "@chakra-ui/react";
+import {useEffect, useState} from "react";
+import { socket } from "./socket";
 
-export default function RunResume({sendQuery, sendKill, fileName, running, debug}) {
+export default function RunResume({sendQuery, sendKill, status, debug}) {
+  const [running, setRunning] = useState(false);
+
+  useEffect(() => {
+    if (status === "running") {
+      setRunning(true);
+    } else {
+      setRunning(false);
+    }
+  }, [status]);
+
   const executeRun = (e) => {
     e.preventDefault();
     sendQuery({"command": "run"});
@@ -24,7 +35,6 @@ export default function RunResume({sendQuery, sendKill, fileName, running, debug
         <Button isDisabled={running} onClick={executeResume}>Resume</Button>
         <Button onClick={killProcess}>Kill</Button>
       </ButtonGroup>
-      {/*<RunningIndicator running={running} debug={debug}/>*/}
       <div style={{display: "flex", gap: "1ch"}}>
         <p>{`Cpu: ${debug?.time?.cpu ?? 0}`}</p>
         <p>{`GC: ${debug?.time?.gc ?? 0}`}</p>

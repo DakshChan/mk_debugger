@@ -104,5 +104,6 @@
   (syntax-rules ()
     ((_ n m i j qvars body ...) (stream-take/format-out n m i j (quote qvars) (query/fresh qvars body ...)))))
 
-(define (resume n m i j)
-  (stream-take/format-out n m i j paused-stream))
+(define-syntax resume
+  (syntax-rules ()
+    ((_ n m i j qvars) (stream-take/format-out n m i j (quote qvars) paused-stream))))

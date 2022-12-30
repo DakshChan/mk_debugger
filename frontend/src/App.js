@@ -12,10 +12,8 @@ import {
   AlertIcon,
   AlertTitle,
 } from '@chakra-ui/react'
-
-import io from 'socket.io-client';
 import QueryPanel from "./QueryPanel";
-const socket = io();
+import { socket } from "./socket";
 
 function App() {
   const [code, setCode] = useState("");
@@ -26,6 +24,8 @@ function App() {
   const [running, setRunning] = useState(false);
   const [queries, setQueries] = useState({});
   const [serverConnected, setServerConnected] = useState(true);
+  const [aggregation, setAggregation] = useState("union");
+  const [diff, setDiff] = useState("0");
 
   const toast = useToast();
 
@@ -59,8 +59,8 @@ function App() {
       setServerConnected(false);
     });
 
-    socket.on('exit', (code, signal) => {
-      console.log("Racket process exited with code", code, "and signal", signal);
+    socket.on('exit', (id, code, signal) => {
+      console.log(`Racket process ${id} exited with code ${code} and signal ${signal}`);
       setRunning(false);
       toast({
         position: "bottom-left",
@@ -73,29 +73,17 @@ function App() {
 
     return () => {
       socket.off('connect');
+      socket.off('connect_error');
       socket.off('disconnect');
       socket.off('exit');
     };
-  }, []);
-
-  const sendKill = () => {
-    socket.emit('kill', (data) => {
-      console.log(data);
-      setRunning(false);
-      toast({
-        position: "bottom-left",
-        title: "Racket process killed",
-        status: "success",
-        isClosable: true
-      });
-    });
-  };
+  }, [toast]);
 
   const sendCode = (file, fileName) => {
     socket.emit('code', file, fileName, (data) => {
       console.log(data);
       setCode((new TextDecoder("utf-8")).decode(data.file));
-      setDebug(undefined);
+      setQueries({});
       setFileName(data.fileName);
       setRunning(false);
       toast({
@@ -107,23 +95,56 @@ function App() {
     });
   };
 
-  const sendQuery = (q) => {
-    setRunning(true);
-    let query = {...q, ...queries};
-    console.log(query);
-    socket.emit('query', query, (data) => {
-      console.log(data);
-      setDebug(data.data);
-      setRunning(false);
-      toast({
-        position: "bottom-left",
-        title: data.message,
-        status: (data.status === 200) ? "success" : "error",
-        ...((data.status === 500) ? {description: data.body} : {}),
-        isClosable: true
-      });
-    });
-  }
+  useEffect(() => {
+    if (queries.length === 0) {
+      setDebug(undefined);
+      return;
+    }
+    if (aggregation === "union") {
+      let pp = [];
+      for (const q in Object.keys(queries)) {
+        for (let p in queries[q]["program-points"]) {
+          p = structuredClone(queries[q]["program-points"][p]);
+          let e = pp.find((e) => {return e.syntax.span === p.syntax.span && e.syntax.position === p.syntax.position});
+          if (e === undefined) {
+            pp.push(p);
+          } else {
+            e.count += p.count;
+            e.fails += p.fails;
+            e.success += p.success;
+          }
+        }
+      }
+      setDebug({"program-points": pp});
+      return;
+    }
+    if (aggregation === "difference") {
+      let pp = structuredClone(queries[diff]["program-points"]);
+      for (const q in Object.keys(queries)) {
+        if (q === diff) {
+          continue;
+        }
+        for (let p in queries[q]["program-points"]) {
+          p = structuredClone(queries[q]["program-points"][p]);
+          let e = pp.find((e) => {return e.syntax.span === p.syntax.span && e.syntax.position === p.syntax.position});
+          if (e === undefined) {
+            // pp.push(p);
+          } else {
+            e.count -= p.count;
+            e.fails -= p.fails;
+            e.success -= p.success;
+          }
+        }
+      }
+      setDebug({"program-points": pp});
+      return;
+    }
+    if (aggregation === "single") {
+      let pp = structuredClone(queries[diff]["program-points"]);
+      setDebug({"program-points": pp});
+      return;
+    }
+  }, [queries, diff, aggregation]);
 
   return (
     <div style={{display: "flex", flexDirection: "column", gap: "0.2em"}}>
@@ -135,11 +156,10 @@ function App() {
       }
       <div style={{display: "flex", gap: "0.2em"}}>
         <UploadCode sendCode={sendCode} fileName={fileName}/>
-        <RunResume running={running} sendQuery={sendQuery} sendKill={sendKill} debug={debug}/>
       </div>
       <div style={{display: "flex", gap: "0.2em"}}>
         <div style={{display: "flex", flexDirection: "column", gap:"0.2em"}}>
-          <QueryPanel setQueries={setQueries}/>
+          <QueryPanel setQueries={setQueries} queries={queries}/>
           <div style={{display: "flex", alignItems:"baseline", gap: "1ch"}}>
             <p>Highlighting</p>
             <Select width={"unset"} size={"sm"} defaultValue={"failures"} onChange={(event) => setCodeHighlight({...codeHighlight, "info": event.target.value})}>
@@ -149,13 +169,33 @@ function App() {
               <option value={"successes"}>Successes</option>
               <option value={"successRatio"}>Success Ratio</option>
             </Select>
+            <p>Aggregation</p>
+            <Select width={"unset"} size={"sm"} defaultValue={"union"} onChange={(event) => setAggregation(event.target.value)}>
+              <option value={"union"}>Union</option>
+              <option value={"difference"}>Difference</option>
+              <option value={"single"}>Single</option>
+            </Select>
+            {
+              (aggregation === "difference" || aggregation === "single") ?
+                <>
+                  <p>Aggregation Num</p>
+                  <Select width={"unset"} size={"sm"} defaultValue={"0"} onChange={(event) => setDiff(event.target.value)}>
+                    {
+                      Object.keys(queries).map((q) => {
+                        return <option value={q}>{q}</option>
+                      })
+                    }
+                  </Select>
+                </> :
+                <></>
+            }
           </div>
           <CodeContainer code={code} debug={debug} codeHighlight={codeHighlight} pointDebug={pointDebug} setPointDebug={setPointDebug}/>
         </div>
         <div style={{width: "-webkit-fill-available"}}>
           <PointInfoPanel pointDebug={pointDebug} code={code}/>
-          <SolutionInfoPanel debug={debug} code={code}/>
-          <RejectionInfoPanel debug={debug} code={code}/>
+          <SolutionInfoPanel queries={queries} code={code}/>
+          <RejectionInfoPanel queries={queries} code={code}/>
         </div>
       </div>
     </div>

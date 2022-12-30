@@ -16,7 +16,8 @@
     "react-scripts": "5.0.1",
     "react-spinners": "^0.13.6",
     "react-timer-hook": "^3.0.5",
-    "socket.io-client": "^4.5.4"
+    "socket.io-client": "^4.5.4",
+    "uuid": "^9.0.0"
   },
   "overrides": {
     "nth-check": "^2.1.1"
