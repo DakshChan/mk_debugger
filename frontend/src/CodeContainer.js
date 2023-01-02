@@ -1,4 +1,4 @@
-import {useEffect, useLayoutEffect, useState} from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import Prism from "./prism.js";
 import "./prism.css"
 import ProgramPoint from "./ProgramPoint";

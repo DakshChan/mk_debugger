@@ -1,4 +1,6 @@
-FROM racket/racket:8.7-full
+FROM alpine
+RUN apk update
+RUN apk add racket
 
 ARG userRepl
 RUN echo "ARGS is ${userRepl}"

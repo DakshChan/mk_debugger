@@ -1,9 +1,7 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 export default function ProgramPoint({children, data, range, codeHighlight, pointDebug, setPointDebug}) {
-
   const [color, setColor] = useState("argb(255, 0, 0, 100)");
-
 
   useEffect(() => {
     colorMap(setColor, codeHighlight, range, data);

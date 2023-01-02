@@ -1,6 +1,5 @@
-import {Button, ButtonGroup} from "@chakra-ui/react";
-import {useEffect, useState} from "react";
-import { socket } from "./socket";
+import { Button, ButtonGroup } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 
 export default function RunResume({sendQuery, sendKill, status, debug}) {
   const [running, setRunning] = useState(false);
@@ -29,7 +28,7 @@ export default function RunResume({sendQuery, sendKill, status, debug}) {
   }
 
   return (
-    <>
+    <div style={{display: "flex", gap: "1ch", alignItems: "center"}}>
       <ButtonGroup size='sm' isAttached variant='outline'>
         <Button isLoading={running} onClick={executeRun} loadingText={"Running"}>Run</Button>
         <Button isDisabled={running} onClick={executeResume}>Resume</Button>
@@ -40,7 +39,7 @@ export default function RunResume({sendQuery, sendKill, status, debug}) {
         <p>{`GC: ${debug?.time?.gc ?? 0}`}</p>
         <p>{`Real: ${debug?.time?.real ?? 0}`}</p>
       </div>
-    </>
+    </div>
   );
 }
 
