@@ -171,19 +171,21 @@ export default function StateInfoPanel({queries, code}) {
                 solution.map((s, i) => {
                   return (
                     <Tr key={i} scrollSnapAlign={"start"}>
-                      <Td style={{display: "flex", alignItems:"center", gap:"2ch"}}>
-                        <p style={{fontWeight: "bolder", fontSize:"150%"}}>{i}</p>
-                        <div>
-                          {
-                            Object.entries(s.binding.sub).map(([key, val]) => {
-                              return (
-                                <div key={key} style={{display: "flex", alignItems: "center", gap:"1ch"}}>
-                                  <p style={{fontWeight: "bold"}}>{key}:</p>
-                                  <p style={{whiteSpace: "break-spaces"}}>{val}</p>
-                                </div>
-                              );
-                            })
-                          }
+                      <Td>
+                        <div style={{display: "flex", alignItems:"center", gap:"2ch"}}>
+                          <p style={{fontWeight: "bolder", fontSize:"150%"}}>{i}</p>
+                          <div>
+                            {
+                              Object.entries(s.binding.sub).map(([key, val]) => {
+                                return (
+                                  <div key={key} style={{display: "flex", alignItems: "center", gap:"1ch"}}>
+                                    <p style={{fontWeight: "bold"}}>{key}:</p>
+                                    <p style={{whiteSpace: "break-spaces"}}>{val}</p>
+                                  </div>
+                                );
+                              })
+                            }
+                          </div>
                         </div>
                       </Td>
                       <Td><p style={{whiteSpace: "break-spaces"}}>{s.binding.cxs}</p></Td>
@@ -218,19 +220,21 @@ export default function StateInfoPanel({queries, code}) {
                 rejection.map((s, i) => {
                   return (
                     <Tr key={i} scrollSnapAlign={"start"}>
-                      <Td style={{display: "flex", alignItems:"center", gap:"2ch"}}>
-                        <p style={{fontWeight: "bolder", fontSize:"150%"}}>{i} </p>
-                        <div>
-                          {
-                            Object.entries(s.binding.sub).map(([key, val]) => {
-                              return (
-                                <div key={key} style={{display: "flex", alignItems: "center", gap:"1ch"}}>
-                                  <p style={{fontWeight: "bold"}}>{key}:</p>
-                                  <p style={{whiteSpace: "break-spaces"}}>{val}</p>
-                                </div>
-                              );
-                            })
-                          }
+                      <Td>
+                        <div style={{display: "flex", alignItems:"center", gap:"2ch"}}>
+                          <p style={{fontWeight: "bolder", fontSize:"150%"}}>{i} </p>
+                          <div>
+                            {
+                              Object.entries(s.binding.sub).map(([key, val]) => {
+                                return (
+                                  <div key={key} style={{display: "flex", alignItems: "center", gap:"1ch"}}>
+                                    <p style={{fontWeight: "bold"}}>{key}:</p>
+                                    <p style={{whiteSpace: "break-spaces"}}>{val}</p>
+                                  </div>
+                                );
+                              })
+                            }
+                          </div>
                         </div>
                       </Td>
                       <Td><p style={{whiteSpace: "break-spaces"}}>{s.binding.cxs}</p></Td>
