@@ -38,10 +38,11 @@ function colorMap(setColor, codeHighlight, range, data) {
     let c = 255 - rangeMap(data.successes, range.successes.min, range.successes.max, 0, 200);
     setColor(`rgba(${c}, 255, ${c}, 100%)`);
   } else if (codeHighlight.info === "successRatio") {
-    let c = 255 - rangeMap((data.successes / (data.fails + data.successes)), 0, 1, 0, 200);
+    let c = 255 - rangeMap(data.successRatio, range.successRatio.min, range.successRatio.max, 0, 200);
     setColor(`rgba(${c}, 255, ${c}, 100%)`);
   } else if (codeHighlight.info === "failRatio") {
-    let c = 255 - rangeMap((data.fails / (data.fails + data.successes)), 0, 1, 0, 200);
+    let c = 255 - rangeMap(data.failRatio, range.failRatio.min, range.failRatio.max, 0, 200);
+    console.log(data.failRatio, range.failRatio.min, range.failRatio.max, c);
     setColor(`rgba(255, ${c}, ${c}, 100%)`);
   } else {
     setColor(`rgba(0, 0, 0, 0%)`);

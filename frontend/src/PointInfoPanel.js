@@ -39,7 +39,9 @@ export default function PointInfoPanel({queries, pointDebug, code}) {
         <div style={{display: "flex", gap: "3ch"}}>
           <p style={{whiteSpace: "nowrap"}}>Encounters: {state?.count}</p>
           <p style={{whiteSpace: "nowrap"}}>Failures: {state?.fails}</p>
+          <p style={{whiteSpace: "nowrap"}}>Failure Ratio: {state?.failRatio.toFixed(3)}</p>
           <p style={{whiteSpace: "nowrap"}}>Successes: {state?.successes}</p>
+          <p style={{whiteSpace: "nowrap"}}>Success Ratio: {state?.successRatio.toFixed(3)}</p>
         </div>
       </div>
     </Collapse>

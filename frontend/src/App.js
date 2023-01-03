@@ -173,7 +173,7 @@ function App() {
       setDebug({"program-points": pp});
       return;
     }
-    if (aggregation === "minuend" && queries[diff] !== undefined) {
+    if (aggregation === "diff" && queries[diff] !== undefined) {
       let pp = structuredClone(queries[diff]["program-points"]);
       for (let q in Object.keys(queries)) {
         q = Object.keys(queries)[q];
@@ -236,16 +236,16 @@ function App() {
             <p>Aggregation</p>
             <Select width={"unset"} size={"sm"} defaultValue={"sum"} onChange={(event) => setAggregation(event.target.value)}>
               <option value={"sum"}>Sum</option>
-              <option value={"minuend"}>Minuend</option>
+              <option value={"diff"}>Diff</option>
               <option value={"average"}>Average</option>
               <option value={"min"}>Min</option>
               <option value={"max"}>Max</option>
               <option value={"single"}>Single</option>
             </Select>
             {
-              (aggregation === "minuend" || aggregation === "single") ?
+              (aggregation === "diff" || aggregation === "single") ?
                 <>
-                  <p>Query</p>
+                  <p>{aggregation === "diff" ? "Minuend" : "Query"}</p>
                   <Select width={"unset"} size={"sm"} defaultValue={"0"} onChange={(event) => setDiff(event.target.value)}>
                     {
                       Object.keys(queries).map((q) => {

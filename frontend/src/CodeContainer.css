@@ -3,7 +3,7 @@
     max-width: 130ch;
     min-width: 80ch;
     width: fit-content;
-    max-height: calc(100vh - 7em) !important;
+    max-height: calc(100vh - 9em) !important;
 }
 
 .code-container pre {
