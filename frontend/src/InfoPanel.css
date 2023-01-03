@@ -12,7 +12,7 @@
 
 .state-info-panel {
     line-height: normal;
-    background-color: pink;
+    background-color: #ffeaf0;
     padding: 1em;
     border-radius: 1em;
     flex: 0 0;
@@ -29,13 +29,13 @@
     margin-bottom: 0.7em;
 }
 
-.point-info-panel p, .time-info-panel p {
-    padding-right: 3ch;
-}
+/*.point-info-panel p, .time-info-panel p {*/
+/*    padding-right: 3ch;*/
+/*}*/
 
-.point-info-panel p:last-child, .time-info-panel p:last-child {
-    padding-right: 0;
-}
+/*.point-info-panel p:last-child, .time-info-panel p:last-child {*/
+/*    padding-right: 0;*/
+/*}*/
 
 .solution-info-panel h3, .solution-info-panel p {
     margin-top: 0.7em;

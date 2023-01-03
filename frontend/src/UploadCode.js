@@ -1,28 +1,11 @@
-import axios from "axios";
-import {useState} from "react";
+import { Button } from "@chakra-ui/react";
 
-export default function UploadCode({setCode, setDebug, fileName, setFileName}) {
+export default function UploadCode({sendCode, fileName}) {
   function handleChange(event) {
 
     const file = event.target.files[0];
     console.log(file);
-    const url = 'http://localhost:3000/code';
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('fileName', file.name);
-    const config = {
-      headers: {
-        'content-type': 'multipart/form-data',
-      },
-    };
-    axios.post(url, formData, config).then((response) => {
-      console.log(response.status);
-      setCode(response.data);
-      setDebug(undefined);
-      setFileName(file.name);
-    }).catch((error) => {
-      console.log(error);
-    });
+    sendCode(file, file.name);
     event.target.value = '';
     event.target.placeholder = 'Upload code';
   }
@@ -30,7 +13,7 @@ export default function UploadCode({setCode, setDebug, fileName, setFileName}) {
   return (
     <>
       <label htmlFor="file_upload">
-        <button style={{pointerEvents: "none"}}>Choose file</button>
+        <Button size={"sm"} style={{pointerEvents: "none"}} variant='outline' >Choose file</Button>
         <span style={{fontSize:"small", marginInline:"1ch"}}>
           {fileName !== "" ? fileName : "No file chosen"}
         </span>

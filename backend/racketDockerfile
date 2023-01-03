@@ -1,0 +1,10 @@
+FROM alpine
+RUN apk update
+RUN apk add racket
+
+ARG userRepl
+WORKDIR /profiler
+COPY ./debugger ./
+COPY ./tmp/${userRepl}/user-code.rkt ./
+
+CMD ["racket", "/profiler/repl.rkt"]

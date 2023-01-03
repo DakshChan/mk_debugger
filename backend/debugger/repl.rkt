@@ -4,8 +4,8 @@
 (define replNamespace (namespace-anchor->namespace replAnchor))
 
 (require json)
-(require (file "{{$DEBUGGER_PATH}}"))
-(include (file "{{$USER_CODE}}"))
+(require (file "mk-fo.rkt"))
+(include (file "user-code.rkt"))
 ; potentially other includes possible here for multi file debugging
 
 (define (input-loop)
@@ -16,17 +16,19 @@
          (let ((solutions (hash-ref json-command 'solutions))
                (steps (hash-ref json-command 'steps))
                (samples (hash-ref json-command 'samples))
+               (queryVars (hash-ref json-command 'queryVars))
                (query (hash-ref json-command 'query)))
 
-              (eval (read (open-input-string (string-append "(run " solutions " " samples " " steps " #t " query")"))) replNamespace)
+              (eval (read (open-input-string (string-append "(run " solutions " " samples " " steps " #t " queryVars " " query ")"))) replNamespace)
               (flush-output))
          (input-loop)]
         [(string=? (hash-ref json-command 'command) "resume")
          (let ((solutions (hash-ref json-command 'solutions))
                (steps (hash-ref json-command 'steps))
-               (samples (hash-ref json-command 'samples)))
+               (samples (hash-ref json-command 'samples))
+               (queryVars (hash-ref json-command 'queryVars)))
 
-              (eval (read (open-input-string (string-append "(resume " solutions " " samples " " steps " #t)"))) replNamespace)
+              (eval (read (open-input-string (string-append "(resume " solutions " " samples " " steps " #t " queryVars ")"))) replNamespace)
               (flush-output))
          (input-loop)]
         [(string=? (hash-ref json-command 'command) "exit") (exit 0)] ; not really necessary
