@@ -1,13 +1,14 @@
-import {useEffect, useLayoutEffect, useState} from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import Prism from "./prism.js";
 import "./prism.css"
 import ProgramPoint from "./ProgramPoint";
 import md5 from "md5";
 import "./CodeContainer.css";
 
-export default function CodeContainer ({code, debug, codeHighlight, setPointDebug}) {
+export default function CodeContainer ({code, debug, codeHighlight, pointDebug, setPointDebug}) {
   const [parsedLines, setParsedLines] = useState([]);
-  const [range, setRange] = useState({encounters: {max: 0, min: 0}, failures: {max: 0, min: 0}, successes: {max: 0, min: 0}});
+  const [range, setRange] = useState({encounters: {max: 0, min: 0}, failures: {max: 0, min: 0},
+    successes: {max: 0, min: 0}, failRatio: {max: 0, min: 0}, successRatio: {max: 0, min: 0}});
   const [scroll, setScroll] = useState(0);
 
   function handleScroll(e) {
@@ -30,7 +31,7 @@ export default function CodeContainer ({code, debug, codeHighlight, setPointDebu
     }
   }, [code, debug]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     Prism.highlightAll();
   }, [code, parsedLines, codeHighlight, range]);
 
@@ -41,20 +42,37 @@ export default function CodeContainer ({code, debug, codeHighlight, setPointDebu
     let minFailure = Number.MAX_SAFE_INTEGER;
     let maxSuccess = Number.MIN_SAFE_INTEGER;
     let minSuccess = Number.MAX_SAFE_INTEGER;
+    let maxFailRatio = Number.MIN_SAFE_INTEGER;
+    let minFailRatio = Number.MAX_SAFE_INTEGER;
+    let maxSuccessRatio = Number.MIN_SAFE_INTEGER;
+    let minSuccessRatio = Number.MAX_SAFE_INTEGER;
 
     if (debug !== undefined){
       for (let i = 0; i < debug["program-points"].length; i++) {
-        maxEncounter = debug["program-points"][i]["count"] > maxEncounter ? debug["program-points"][i]["count"] : maxEncounter;
-        minEncounter = debug["program-points"][i]["count"] < minEncounter ? debug["program-points"][i]["count"] : minEncounter;
-        maxFailure = debug["program-points"][i]["fails"] > maxFailure ? debug["program-points"][i]["fails"] : maxFailure;
-        minFailure = debug["program-points"][i]["fails"] < minFailure ? debug["program-points"][i]["fails"] : minFailure;
-        maxSuccess = debug["program-points"][i]["successes"] > maxSuccess ? debug["program-points"][i]["successes"] : maxSuccess;
-        minSuccess = debug["program-points"][i]["successes"] < minSuccess ? debug["program-points"][i]["successes"] : minSuccess;
+        let programPoint = debug["program-points"][i];
+        maxEncounter = Math.max(programPoint.count, maxEncounter);
+        minEncounter = Math.min(programPoint.count, minEncounter);
+        maxFailure = Math.max(programPoint.fails, maxFailure);
+        minFailure = Math.min(programPoint.fails, minFailure);
+        maxSuccess = Math.max(programPoint.successes, maxSuccess);
+        minSuccess = Math.min(programPoint.successes, minSuccess);
+        let fs = (programPoint.fails + programPoint.successes)
+        if (fs === 0) {
+          fs = 1;
+        }
+        maxFailRatio = Math.max((programPoint.fails / fs), maxFailRatio);
+        minFailRatio = Math.min((programPoint.fails / fs), minFailRatio);
+        maxSuccessRatio = Math.max((programPoint.successes / fs), maxSuccessRatio);
+        minSuccessRatio = Math.min((programPoint.successes / fs), minSuccessRatio);
       }
     }
-    setRange({encounters: {max: maxEncounter, min: minEncounter},
+    setRange({
+      encounters: {max: maxEncounter, min: minEncounter},
       failures: {max: maxFailure, min: minFailure},
-      successes: {max: maxSuccess, min: minSuccess}});
+      successes: {max: maxSuccess, min: minSuccess},
+      failRatio: {max: maxFailRatio, min: minFailRatio},
+      successRatio: {max: maxSuccessRatio, min: minSuccessRatio}
+    });
   }, [debug]);
 
   if (debug !== undefined) {
@@ -64,7 +82,7 @@ export default function CodeContainer ({code, debug, codeHighlight, setPointDebu
           {
             parsedLines.map((line, index) => {
               if (line.data !== undefined) {
-                return <ProgramPoint key={md5(line.text) + index} data={line.data} range={range} codeHighlight={codeHighlight} setPointDebug={setPointDebug}>{line.text}</ProgramPoint>
+                return <ProgramPoint key={md5(line.text) + index} data={line.data} range={range} codeHighlight={codeHighlight} pointDebug={pointDebug} setPointDebug={setPointDebug}>{line.text}</ProgramPoint>
               } else {
                 return <span key={md5(line.text) + index}>{line.text}</span>
               }
@@ -91,12 +109,19 @@ function programPointParser(code, programPointList) {
   let resList = [];
   programPointList.sort((a, b) =>  a.syntax.position - b.syntax.position);
   let end = 1, start = 1;
-  for (const programPoint of programPointList) {
+  for (let programPoint of programPointList) {
+    programPoint = structuredClone(programPoint);
     start = programPoint.syntax.position;
     if (start - end > 0) {
       resList.push({"key": end, "text": code.substring(start-1, end-1), "data": undefined});
     }
     end = start + programPoint.syntax.span;
+    let fs = (programPoint.fails + programPoint.successes)
+    if (fs === 0) {
+      fs = 1;
+    }
+    programPoint.failRatio = programPoint.fails / fs;
+    programPoint.successRatio = programPoint.successes / fs;
     resList.push({"key": start, "text": code.substring(start-1, end-1), "data": programPoint});
   }
   if (end !== code.length) {

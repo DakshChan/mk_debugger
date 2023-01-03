@@ -25,9 +25,10 @@
         [(string=? (hash-ref json-command 'command) "resume")
          (let ((solutions (hash-ref json-command 'solutions))
                (steps (hash-ref json-command 'steps))
-               (samples (hash-ref json-command 'samples)))
+               (samples (hash-ref json-command 'samples))
+               (queryVars (hash-ref json-command 'queryVars)))
 
-              (eval (read (open-input-string (string-append "(resume " solutions " " samples " " steps " #t)"))) replNamespace)
+              (eval (read (open-input-string (string-append "(resume " solutions " " samples " " steps " #t " queryVars ")"))) replNamespace)
               (flush-output))
          (input-loop)]
         [(string=? (hash-ref json-command 'command) "exit") (exit 0)] ; not really necessary
